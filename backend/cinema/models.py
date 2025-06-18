@@ -1,34 +1,34 @@
 from django.db import models
 
 class Role(models.Model):
-    role_name = models.CharField(max_length=255, unique=True)
+    role_name = models.CharField(max_length=5, unique=True)
 
     def __str__(self):
         return self.role_name
 
 
 class User(models.Model):
-    user_name = models.CharField(max_length=255)
+    user_name = models.CharField(max_length=12)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    password = models.CharField(max_length=30)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.user_name
 
 
 class Genre(models.Model):
-    genre_name = models.CharField(max_length=255, unique=True)
+    genre_name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.genre_name
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=50)
     description = models.TextField()
     duration_minutes = models.PositiveIntegerField()
-    img_url = models.URLField(max_length=512)
+    img_url = models.URLField(max_length=200)
     is_active = models.BooleanField(default=True)
     genres = models.ManyToManyField(Genre, through='MovieGenre')
 
@@ -37,8 +37,8 @@ class Movie(models.Model):
 
 
 class MovieGenre(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    genre = models.ForeignKey(Genre, on_delete=models.PROTECT)
 
     class Meta:
         unique_together = ('movie', 'genre')
@@ -63,7 +63,7 @@ class Session(models.Model):
 
 
 class Status(models.Model):
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=8)
 
     def __str__(self):
         return self.status
