@@ -39,11 +39,13 @@ class Movie(models.Model):
     slogan = models.CharField(max_length=200)
     description = models.TextField()
     year = models.PositiveIntegerField()
+    age_rate = models.PositiveIntegerField()
     language = models.CharField(max_length=10)
     duration_minutes = models.PositiveIntegerField()
     img_url = models.URLField(max_length=200)
     trailer_url = models.URLField(max_length=300)
     is_active = models.BooleanField(default=True)
+
     genres = models.ManyToManyField(Genre, through='MovieGenre')
     actors = models.ManyToManyField(Actor, through='MovieActor')
     directors = models.ManyToManyField(Director, through='MovieDirector')
