@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -11,11 +12,7 @@ class StatusChoices(models.TextChoices):
     CANCELLED   = 'CA', 'Cancelled'
 
 
-class User(models.Model):
-    user_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=64)
-    salt = models.CharField(max_length=44)
+class User(AbstractUser):
     role = models.CharField(
         max_length=2,
         choices=RoleChoices.choices,
@@ -23,7 +20,7 @@ class User(models.Model):
     )
 
     def __str__(self):
-        return self.user_name
+        return self.username
 
 
 class Genre(models.Model):
@@ -32,6 +29,18 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre_name
 
+class Actor(models.Model):
+    actor_name = models.CharField(max_length=70, unique=True)
+
+    def __str__(self):
+        return self.actor_name
+
+
+class Director(models.Model):
+    director_name = models.CharField(max_length=70, unique=True)
+
+    def __str__(self):
+        return self.director_name
 
 class Movie(models.Model):
     title = models.CharField(max_length=120)
@@ -39,7 +48,7 @@ class Movie(models.Model):
     slogan = models.CharField(max_length=200)
     description = models.TextField()
     year = models.PositiveIntegerField()
-    age_rate = models.PositiveIntegerField()
+    age_rate = models.PositiveIntegerField(default=0)
     language = models.CharField(max_length=10)
     duration_minutes = models.PositiveIntegerField()
     img_url = models.URLField(max_length=200)
@@ -53,6 +62,12 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
+class MovieActor(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    actor = models.ForeignKey(Actor, on_delete=models.PROTECT)
+
+    class Meta:
+        unique_together = ('movie', 'actor')
 
 class MovieGenre(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
@@ -61,24 +76,6 @@ class MovieGenre(models.Model):
     class Meta:
         unique_together = ('movie', 'genre')
 
-class Actor(models.Model):
-    actor_name = models.CharField(max_length=70, unique=True)
-
-    def __str__(self):
-        return self.actor_name
-
-class MovieActor(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
-    actor = models.ForeignKey(Actor, on_delete=models.PROTECT)
-
-    class Meta:
-        unique_together = ('movie', 'actor')
-
-class Director(models.Model):
-    director_name = models.CharField(max_length=70, unique=True)
-
-    def __str__(self):
-        return self.director_name
 
 class MovieDirector(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
@@ -118,4 +115,4 @@ class Booking(models.Model):
     )
 
     def __str__(self):
-        return f'Booking #{self.id} - {self.user.user_name}'
+        return f'Booking #{self.id} - {self.user.username}'

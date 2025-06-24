@@ -2,8 +2,8 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from cinema.models import Movie, Booking, Genre
-from cinema.public_api.serializers import MovieSerializer, BookingSerializer, GenreSerializer
+from cinema.models import Movie, Booking, Genre, User
+from cinema.public_api.serializers import MovieSerializer, BookingSerializer, GenreSerializer, RegisterSerializer
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Movie.objects.filter(is_active=True)
@@ -18,3 +18,7 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
 class PublicUserBooking(generics.CreateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
