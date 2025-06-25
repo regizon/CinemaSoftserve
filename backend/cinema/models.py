@@ -39,7 +39,7 @@ class Movie(models.Model):
     slogan = models.CharField(max_length=200)
     description = models.TextField()
     year = models.PositiveIntegerField()
-    age_rate = models.PositiveIntegerField()
+    age_rate = models.PositiveIntegerField(default=18)
     language = models.CharField(max_length=10)
     duration_minutes = models.PositiveIntegerField()
     img_url = models.URLField(max_length=200)
@@ -47,8 +47,8 @@ class Movie(models.Model):
     is_active = models.BooleanField(default=True)
 
     genres = models.ManyToManyField(Genre, through='MovieGenre')
-    actors = models.ManyToManyField(Actor, through='MovieActor')
-    directors = models.ManyToManyField(Director, through='MovieDirector')
+    actors = models.ManyToManyField('Actor', through='MovieActor')
+    directors = models.ManyToManyField('Director', through='MovieDirector')
 
     def __str__(self):
         return self.title
