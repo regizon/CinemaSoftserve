@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
+body {
+  background-color: white;
+  color: white;
+  margin: 0;
+  font-family: sans-serif;
+}
+.header1 {
+    background-color: #1B1F3A;
+    height: 74px;
+
+}
+.container1 {
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    height: 100%;
+}
+
+.logo1 {
+    margin-left: 41.875%;
+    font-size: 96px;
+    font-family: Love Ya Like A Sister;
+    font-weight: 400;
+    color: white;
+}
+.login-link1{
+    text-decoration:none;
+    color: white;
+    margin-right: 2.5%;
+    font-size: 20px;
+    font-family: Alike;
+}
+.navigation{
+    background-color: #1B1F3A;
+    height: 84px;
+}
+.navigation1{
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-left: 181px;
+    margin-right: 150px;
+    font-size: 36px;
+    font-family: Alike;
+    padding-top: 16px;
+}
+.nav {
+    text-decoration: none;
+    color: white;
+}
+.main{
+    width: 1920px;
+    height: 1500px;
+}
+.main1{
+    display: flex;
+    padding-top: 80px;
+    margin-left: 117px;
+    align-items:center;
+    gap: 135px;
+    height: 625px;
+    width: 1165px;
+
+}
+
+.poster{
+    width: 320px;
+    height: 525px;
+}
+.film-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+}
+.film-caption {
+    margin-top: 7px;
+    font-size: 32px;
+    color: black;
+    font-family: Alike;
+    align-items: flex-end;
+    width: 320px;
+    line-height: normal;
+
+}
+.film-caption2 {
+    font-size: 12px;
+    color: black;
+    font-family: Alike;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+img {
+  cursor: pointer;
+}
+.footer {
+    height: 381px;
+    background-color: #1B1F3A;
+}
