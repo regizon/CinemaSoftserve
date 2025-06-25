@@ -1,21 +1,26 @@
 from django.urls import path, include
-from cinema.public_api.views import index, PublicSessionViewset
-from cinema.admin_api.views import AdminMovieViewset, AdminBookingViewset, AdminSessionViewset, AdminHallViewset, \
-    AdminActorViewset, AdminDirectorViewset
-from cinema.public_api.views import PublicMovieViewset, PublicUserBooking
+
+from cinema.admin_api.views import AdminMovieViewset
+from cinema.public_api.views import PublicMovieViewset, PublicUserBooking, RegisterView
 from rest_framework import routers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 router = routers.SimpleRouter()
-router.register(r'public/movies', PublicMovieViewset)
-router.register(r'public/sessions', PublicSessionViewset)
+router.register(r'public/movies', PublicMovieViewset,basename='public')
 router.register(r'admin/movies', AdminMovieViewset, basename='admin')
-router.register(r'admin/sessions', AdminSessionViewset, basename='admin_sessions')
-router.register(r'admin/bookings', AdminBookingViewset)
-router.register(r'admin/halls', AdminHallViewset)
-router.register(r'admin/actors', AdminActorViewset)
-router.register(r'admin/directors', AdminDirectorViewset)
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-    path('api/v1/bookings/', PublicUserBooking.as_view()),
-    path('', index, name='index'),
+    path('api/v1/bookings', PublicUserBooking.as_view()),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+# urlpatterns = [
+#     path('api/v1/movies', PublicMovieApiView.as_view()),
+#     path('api/v1/movies/<int:pk>/', PublicMovieDetailsApiView.as_view()),
+#     path('api/v1/bookings', PublicUserBooking.as_view()),
+# ]
