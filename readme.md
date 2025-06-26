@@ -10,3 +10,9 @@ python manage.py migrate
 python manage.py createsuperuser
 
 python manage.py runserver
+
+FRONTEND
+
+(! node.js 22.17.0(LTS)+ required !)
+
+npm run dev
