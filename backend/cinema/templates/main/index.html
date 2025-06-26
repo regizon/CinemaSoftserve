@@ -1,10 +1,83 @@
-<!doctype html>
-<html lang="ua">
-<head>
-    <meta charset="UTF-8">
-    <title>Головна сторінка</title>
-</head>
-<body>
-    <h4>Головна сторінка з постерами</h4>
-</body>
-</html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Головна — Svinkino{% endblock %}
+
+{% block content %}
+<div class="carusel" style="background-image: url('{% static "images/blur.png" %}');">
+<div class="carusel1">
+  <img src="static/images/opengeimer.png">
+  <img src="static/images/tor.png">
+  <img src="static/images/opengeimer.png">
+</div>
+</div>
+<div class="navigation">
+  <nav class="navigation1">
+    <a href="#" class="nav"> <img src="static/images/filtr.svg">Фільтр</a>
+    <a href="#" class="nav">Купони та акції</a>
+    <a href="#" class="nav">Купівля квитків</a>
+    <a href="#" class="nav">Скоро у КІНО!</a>
+  </nav>
+</div>
+<div class="main">
+    <div class="main1">
+        <div class="film-item">
+            <img src="static/images/elio.png">
+            <p class="film-caption">Еліо</p>
+            <p class="film-caption2">2025, США, пригоди</p>
+        </div>
+        <div class="film-item">
+            <img src="static/images/torf.png">
+            <p class="film-caption">Тор: Любов і Грім</p>
+            <p class="film-caption2">2022, США, бойовик/пригоди</p>
+        </div>
+        <div class="film-item">
+            <img src="static/images/x-men.png">
+            <p class="film-caption">Люди Ікс: Темний Фенікс</p>
+            <p class="film-caption2">2019, США, фантастика</p>
+        </div>
+        <div class="film-item">
+             <img src="static/images/lilo.png">
+             <p class="film-caption">Ліло і Стіч</p>
+             <p class="film-caption2">2025, США, пригоди</p>
+        </div>
+    </div>
+    <div class="main1">
+        <div class="film-item">
+            <img src="static/images/dovod.png">
+            <p class="film-caption">Довод</p>
+            <p class="film-caption2">2020, США, бойовик</p>
+        </div>
+        <div class="film-item">
+            <img src="static/images/mayak.png">
+            <p class="film-caption">Маяк</p>
+            <p class="film-caption2">2020, США, жахи</p>
+        </div>
+        <div class="film-item">
+            <img src="static/images/lordoftherings.png">
+            <p class="film-caption">Володар перснів: Повернення короля</p>
+            <p class="film-caption2">2004, США, пригоди</p>
+        </div>
+        <div class="film-item">
+             <img src="static/images/pirates.png">
+             <p class="film-caption">Пірати Карибського моря: Мерці не розповідають казки</p>
+             <p class="film-caption2">2017, США, фантастика</p>
+        </div>
+    </div>
+
+</div>
+<!-- Навігація -->
+
+
+<!-- Список фільмів -->
+<main class="films">
+  {% for film in films %}
+  <div class="film-card">
+    <img src="{{ film.image }}" alt="{{ film.title }}">
+    <p class="film-title">{{ film.title }}</p>
+    <p class="film-info">{{ film.year }}, {{ film.country }}, {{ film.genre }}</p>
+  </div>
+  {% endfor %}
+</main>
+
+<footer class="footer"></footer>
+{% endblock %}
