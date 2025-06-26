@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Фільм{% endblock %}
+
+{% block content %}
+<div class="film">
+<div class="film-container">
+  <!-- Зображення і кнопка -->
+  <div class="film-poster">
+    <img src="{% static 'images/elio.png' %}" alt="Еліо">
+    <button class="buy-button">Придбати квиток</button>
+  </div>
+
+  <!-- Опис фільму -->
+  <div class="film-info">
+    <h1>Еліо</h1>
+    <p><strong>Слоган:</strong> «Всесвіт набрав… неправильний номер»</p>
+    <p><strong>Дата виходу:</strong> 12 червня 2025 року</p>
+    <p><strong>Вікові обмеження:</strong> 0+</p>
+    <p><strong>Країна:</strong> США</p>
+    <p><strong>Оригінальна назва:</strong> Elio</p>
+    <p><strong>Мова:</strong> українська</p>
+    <p><strong>Режисер:</strong> Едріан Моліна, Мадлен Шарафян, Домі Ші</p>
+    <p><strong>Жанр:</strong> Пригоди, Комедії, Драми, Фантастика, Сімейні</p>
+    <p><strong>Час:</strong> 99 хвилин</p>
+    <p><strong>У головних ролях:</strong> Йонас Кібріб, Америка Феррера, Джаміла Джаміл, Бред Геррет, Зої Салдана та інші</p>
+    <h3>Опис фільму</h3>
+    <p>11-річний Еліо, невдаха з багатою фантазією, випадково телепортується до Комуніверсу — міжпланетної організації, що об'єднує представників далеких галактик. Помилково призначений послом Землі і зовсім не готовий до такого тиску, Еліо має встановити нові зв'язки з ексцентричними інопланетянами, пройти низку серйозних випробувань та дізнатися, ким йому судилося бути насправді</p>
+  </div>
+
+  <!-- Розклад сеансів -->
+  <div class="film-schedule">
+    <div class="schedule-header">
+        <span>Розклад сеансів</span>
+    <select>
+      <option>Пт, 21 червня</option>
+    </select>
+
+    </div>
+    <ul>
+        <li>
+            <span class="hall-name">Червоний зал</span><br>
+            <a href="#">9:15</a>
+        </li>
+        <li>
+            <span class="hall-name">Червоний зал</span><br>
+            <a href="#">13:15</a>
+        </li>
+        <li>
+            <span class="hall-name">Синій зал</span><br>
+            <a href="#">17:20 3D</a>
+        </li>
+    </ul>
+  </div>
+</div>
+<div class="trailer">
+    <iframe width="696" height="392" src="https://www.youtube.com/embed/t_lKIafWunA?si=6i6hVfn94p_89TW-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+    <div class="main-film">
+        <div class="poster-film">
+            <div class="film-item1">
+                <img src="{% static 'images/elio.png' %}">
+                <div class="film-caption1">Еліо</div>
+                <div class="film-caption3">2025, США, пригоди</div>
+            </div>
+        </div>
+        <div class="poster-film">
+             <div class="film-item1">
+                <img src="{% static 'images/torf.png' %}">
+                <div class="film-caption1">Тор: Любов і Грім</div>
+                <div class="film-caption3">2022, США, бойовик/пригоди</div>
+             </div>
+        </div>
+        <div class="poster-film">
+             <div class="film-item1">
+                 <img src="{% static 'images/x-men.png' %}">
+                 <div class="film-caption1">Люди Ікс: Темний Фенікс</div>
+                  <div class="film-caption3">2019, США, фантастика</div>
+             </div>
+        </div>
+        <div class="poster-film">
+            <div class="film-item1">
+                 <img src="{% static 'images/lilo.png' %}">
+                 <div class="film-caption1">Ліло і Стіч</div>
+                 <div class="film-caption3">2025, США, пригоди</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"></footer>
+{% endblock %}
