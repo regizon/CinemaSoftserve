@@ -4,6 +4,7 @@ body {
   color: white;
   margin: 0;
   font-family: sans-serif;
+  overflow-x: hidden;
 }
 p {
     margin: 0;
