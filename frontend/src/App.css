@@ -1,10 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
-body {
-  background-color: white;
-  color: white;
-  margin: 0;
-  font-family: sans-serif;
-}
+
 .header1 {
     background-color: #1B1F3A;
     height: 74px;
@@ -55,12 +49,13 @@ body {
 }
 .main1{
     display: flex;
+    flex-wrap: wrap;
     padding-top: 80px;
     margin-left: 117px;
     align-items:center;
     gap: 135px;
     height: 625px;
-    width: 1165px;
+    width: 1980px;
 
 }
 
@@ -90,13 +85,7 @@ body {
     color: black;
     font-family: Alike;
 }
-p {
-    margin: 0;
-    padding: 0;
-}
-img {
-  cursor: pointer;
-}
+
 .footer {
     height: 381px;
     background-color: #1B1F3A;
