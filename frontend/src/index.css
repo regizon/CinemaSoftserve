@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
+body {
+  background-color: white;
+  color: white;
+  margin: 0;
+  font-family: sans-serif;
+  overflow-x: hidden;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+img {
+  cursor: pointer;
+}

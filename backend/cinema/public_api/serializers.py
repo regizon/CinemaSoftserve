@@ -4,8 +4,18 @@ from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, H
 from django.contrib.auth.hashers import make_password
 
 
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = '__all__'
 
 class MovieSerializer(serializers.ModelSerializer):
+    genres = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='genre_name'
+    )
+
     class Meta:
         model = Movie
         fields = '__all__'
@@ -22,10 +32,7 @@ class BookingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("На обраний вами сеанс немає вільних місць")
         return session
 
-class GenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = '__all__'
+
 
 
 class SessionSerializer(serializers.ModelSerializer):
