@@ -10,7 +10,8 @@ from cinema.public_api.serializers import MovieSerializer, BookingSerializer, Ge
 from django.views.generic import TemplateView
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
-    queryset = Movie.objects.filter(is_active=True)
+    queryset = Movie.objects.filter(is_active=True)\
+                            .prefetch_related('genres')
     serializer_class = MovieSerializer
 
     @action(methods=['get'], detail=False)

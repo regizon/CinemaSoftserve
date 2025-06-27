@@ -47,6 +47,10 @@ class Movie(models.Model):
     original_title = models.CharField(max_length=120)
     slogan = models.CharField(max_length=200)
     description = models.TextField()
+    country = models.TextField(     
+        default='США',
+        max_length=30
+    )
     year = models.PositiveIntegerField()
     age_rate = models.PositiveIntegerField(default=0)
     language = models.CharField(max_length=10)
