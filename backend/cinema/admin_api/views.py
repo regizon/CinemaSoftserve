@@ -7,7 +7,7 @@ from cinema.public_api.serializers import MovieSerializer, SessionSerializer, Bo
 
 
 class AdminMovieViewset(viewsets.ModelViewSet):
-    queryset = Movie.objects.all()
+    queryset = Movie.objects.all().order_by('id')
     serializer_class = MovieSerializer
     permission_classes = (IsAdminUser,)
 
