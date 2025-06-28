@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres, img_url, trailer_url }) {
 
-  console.log('url:', trailer_url);
+  const genreString = genres.join(', ');
 return (
 <div className="film-container">
       <div className="film-poster">
@@ -33,7 +33,7 @@ return (
           <strong>Режисер:</strong> Едріан Моліна, Мадлен Шарафян, Домі Ші
         </p>
         <p>
-          <strong>Жанр:</strong> {genres}, Комедії, Драми, Фантастика, Сімейні
+          <strong>Жанр:</strong> {genreString}, Комедії, Драми, Фантастика, Сімейні
         </p>
         <p>
           <strong>Час:</strong> {duration_minutes}

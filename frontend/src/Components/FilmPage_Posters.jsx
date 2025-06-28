@@ -1,43 +1,30 @@
-import React from 'react';
-
-//TODO: change this to db info (carousel films)
-const films = [
-  {
-    id: 1,
-    src: '/img/movies/elio.png',
-    title: 'Еліо',
-    info: '2025, США, пригоди',
-  },
-  {
-    id: 2,
-    src: '/img/movies/torf.png',
-    title: 'Тор: Любов і Грім',
-    info: '2022, США, бойовик/пригоди',
-  },
-  {
-    id: 3,
-    src: '/img/movies/x-men.png',
-    title: 'Люди Ікс: Темний Фенікс',
-    info: '2019, США, фантастика',
-  },
-  {
-    id: 4,
-    src: '/img/movies/lilo.png',
-    title: 'Ліло і Стіч',
-    info: '2025, США, пригоди',
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 
 export default function FilmPage_Posters() {
+    const { id } = useParams();            
+  const [movies, setMovie] = useState(null);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/v1/public/movies/`)
+      .then(res => res.json())
+      .then(data => setMovie(data))
+      .catch(err => console.error(err));
+  }, [id]);
+
+  if (!movies) return <div>Загрузка...</div>;
+  const four_movies = movies.results.slice(0, 4); 
   return (
     <div className="main-film">
-      {films.map(({ id, src, title, info }) => (
+      {four_movies.map(({ id, img_url, title, year, country, genre }) => (
         <div key={id} className="poster-film">
-          <div className="film-item1">
-            <img src={src} alt={title} />
-            <div className="film-caption1">{title}</div>
-            <div className="film-caption3">{info}</div>
-          </div>
+          <Link to={`/film/${id}`}>
+            <div className="film-item1">
+              <img src={img_url} alt={title} />
+              <div className="film-caption1">{title}</div>
+              <div className="film-caption3">{`${year}, ${country}, ${genre}`}</div>
+            </div>
+          </Link>
         </div>
       ))}
     </div>
