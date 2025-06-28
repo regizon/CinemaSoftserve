@@ -1,7 +1,7 @@
 
 .header1 {
     background-color: #1B1F3A;
-    height: 74px;
+    height: 78px;
 
 }
 .container1 {
@@ -13,6 +13,7 @@
 
 .logo1 {
     margin-left: 41.875%;
+    margin-top: 10px;
     font-size: 96px;
     font-family: Love Ya Like A Sister;
     font-weight: 400;

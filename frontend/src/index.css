@@ -16,6 +16,24 @@ p {
 img {
   cursor: pointer;
 }
+.header1 a,
+.header1 a:visited,
+.header1 a:active,
+.header1 a:focus {
+  text-decoration: none;  
+  background: none;       
+  border: none;           
+  box-shadow: none;       
+  color: #ffffff8f;            
+  outline: none;          
+}
+.header1 a:hover {
+  color: #fff; 
+}
+.header1 a:active {
+  color: #ffffffb7; 
+}
+
 .logo1 a,
 .logo1 a:visited,
 .logo1 a:hover,

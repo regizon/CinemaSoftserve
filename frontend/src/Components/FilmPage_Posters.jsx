@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 export default function FilmPage_Posters() {
     const { id } = useParams();            
   const [movies, setMovie] = useState(null);
+  
 
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/v1/public/movies/`)
