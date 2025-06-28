@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@@4$v2d8ztboxb&lezo^=deob+wg$s2&n04=d5%6xzd#f&(!_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cinemasoftserve-8ejj.onrender.com']
 
 
 # Application definition
@@ -57,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "cinemasoftserve-8ejj.onrender.com"
 ]
 
 ROOT_URLCONF = 'cinema_project.urls'
