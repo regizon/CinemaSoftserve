@@ -1,28 +1,23 @@
 import React from 'react';
-import './App.css'
-import FilmGrid from './components/FilmGrid'
-import Carousel from './Components/Carousel';
+import './App.css';
+import Home from './pages/Home.jsx';
+import NotFound from './pages/NotFound.jsx';
+import Film from './pages/Film'; 
+import Footer from './Components/Footer.jsx'
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
 
   return (
     <>
-      
-      <Carousel />
-
-      {/* Навигация */}
-      <div className="navigation">
-        <nav className="navigation1">
-          <a href="#" className="nav"><img src="/img/icons/filtr.svg" alt="Фільтр" /> Фільтр</a>
-          <a href="#" className="nav">Купони та акції</a>
-          <a href="#" className="nav">Купівля квитків</a>
-          <a href="#" className="nav">Скоро у КІНО!</a>
-        </nav>
-      </div>
-
-      <FilmGrid />
-
-      <footer className="footer" />
+    <div className='content'>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/film/:id" element={<Film />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </div>
     </>
   );
 }

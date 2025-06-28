@@ -23,7 +23,7 @@ export default function Carousel() {
             type="button"
             data-bs-target="#carouselExampleCaptions"
             data-bs-slide-to={i}
-            className={i === 0 ? 'active' : ''}
+            className={i === 0 ? 'active' : '' }
             aria-current={i === 0 ? 'true' : undefined}
             aria-label={`Slide ${i + 1}`}
           />
