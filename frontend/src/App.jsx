@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css'
-import FilmGrid from './components/FilmGrid'
+import FilmGrid from './Components/FilmGrid'
 import Carousel from './Components/Carousel';
 
 function App() {
