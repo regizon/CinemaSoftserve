@@ -21,9 +21,14 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BookingSerializer(serializers.ModelSerializer):
+    movie_title = serializers.CharField(source='session.movie.title', read_only=True)
+    session_time = serializers.DateTimeField(source='session.start_time', read_only=True)
+
     class Meta:
         model = Booking
-        fields = '__all__'
+        fields = ['id', 'session', 'session_time', 'movie_title', 'status']
+        read_only_fields = ['id', 'movie_title', 'session_time', 'status']
+
 
     def validate_session(self, session):
         booked_seats = Booking.objects.filter(session=session).count()
@@ -32,7 +37,11 @@ class BookingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("На обраний вами сеанс немає вільних місць")
         return session
 
-
+class BookingCancelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['id']
+        read_only_fields = ['id']
 
 
 class SessionSerializer(serializers.ModelSerializer):
