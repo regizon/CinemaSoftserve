@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
+a {
+  text-decoration: none;
+}
 body {
+  
   background-color: white;
   margin: 0;
   font-family: sans-serif;
@@ -11,6 +15,18 @@ p {
 }
 img {
   cursor: pointer;
+}
+.logo1 a,
+.logo1 a:visited,
+.logo1 a:hover,
+.logo1 a:active,
+.logo1 a:focus {
+  text-decoration: none;  
+  background: none;       
+  border: none;           
+  box-shadow: none;       
+  color: #fff;            
+  outline: none;          
 }
 .footer {
   height: 253px;
