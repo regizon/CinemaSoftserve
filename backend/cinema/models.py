@@ -113,6 +113,7 @@ class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     booked_at = models.DateTimeField(auto_now_add=True)
+    seat_number = models.CharField(max_length=100)
     status    = models.CharField(
         max_length=2,
         choices=StatusChoices.choices,
@@ -120,4 +121,4 @@ class Booking(models.Model):
     )
 
     def __str__(self):
-        return f'Booking #{self.id} - {self.user.username}'
+        return f'Booking #{self.id} - {self.user.username} - Seat {self.seat_number}'
