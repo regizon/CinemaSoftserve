@@ -1,0 +1,9 @@
+.not-found-page {
+    min-height: 66vh;
+}
+
+.not-found-content {
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}

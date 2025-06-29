@@ -56,6 +56,7 @@ class Movie(models.Model):
     language = models.CharField(max_length=10)
     duration_minutes = models.PositiveIntegerField()
     img_url = models.URLField(max_length=200)
+    poster_url = models.URLField(max_length=200, null=True, blank=True)
     trailer_url = models.URLField(max_length=300)
     is_active = models.BooleanField(default=True)
 

@@ -1,0 +1,275 @@
+.film{
+    height: 2151px;
+    margin-top: -125px;
+}
+.film-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 65px;
+  color: black;
+  padding: 0 100px;
+
+}
+
+.film-poster img {
+  width: 396px;
+  height: 590px;
+  border-radius: 6px;
+  display: flex;
+
+  margin-top: 214px;
+}
+
+.buy-button {
+    width: 396px;
+    height: 95px;
+    margin-top: 15px;
+    background-color: #526FE2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 36px;
+    font-family: Inter;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+
+.film-info {
+
+    margin-top: 214px;
+    flex: 2;
+    font-size: 24px;
+    max-width: 739px;
+}
+
+.film-info h1 {
+  font-size: 64px;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.film-info p {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.film-schedule {
+  background-color: #1B1F3A;
+  color: white;
+  border-radius: 8px;
+  width: 380px;
+  height: 700px;
+  margin-top: 215px;
+
+
+}
+
+.film-schedule select {
+  margin-top: 20px;
+  width: 314px;
+  border-radius: 15px;
+  background-color: #526FE2;
+  color: white;
+  padding: 5px;
+  font-size: 14px;
+
+
+}
+
+.film-schedule ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+.film-schedule li {
+
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.film-schedule a {
+    margin-left: 62px;
+    color: #87b9ff;
+    text-decoration: none;
+}
+
+.film-schedule a:hover {
+  text-decoration: underline;
+}
+.schedule-header {
+    width: 380px;
+    height: 150px;
+    margin: 0;
+    background-color: #323759;
+    font-family: Alike;
+    font-size: 32px;
+
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.hall-name {
+  display: inline-block;
+  margin-left: 43px;
+
+}
+.trailer{
+    margin-top: 160px;
+    display: flex;
+    justify-content: center;
+}
+.poster-film img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster-film {
+    width: 200px;
+    height: 298px;
+    flex-shrink: 0;
+}
+
+.film-item1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+}
+.film-caption1 {
+    margin-top: 7px;
+    font-size: 24px;
+    color: black;
+    font-family: Alike;
+    align-items: flex-end;
+    width: 200px;
+    line-height: normal;
+
+}
+.film-caption3 {
+    font-size: 12px;
+    color: black;
+    font-family: Alike;
+}
+.main-film{
+    display: flex;
+    padding-top: 80px;
+    margin-left: 500px;
+    align-items:center;
+    gap: 42px;
+    height: 625px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: fit-content;
+
+}
+.container {
+  width: 770%;
+  max-width: 600px;
+  text-align: center;
+  padding: 20px;
+}
+
+.title {
+    color: black;
+  font-size: 48px;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-row {
+  display: flex;
+  gap: 187px;
+
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+
+}
+
+.full {
+  width: 100%;
+
+}
+
+.submit-btn {
+  margin: 26px auto 0;
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #526FE2;
+  color: white;
+  font-size: 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 228px;
+  display: block;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+  color: #666;
+  font-size: 20px;
+}
+
+.divider hr {
+  flex: 1;
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.back-link {
+  font-size: 20px;
+  color: #1B1F3A;
+  text-decoration: none;
+}
+.wrapper {
+  display: flex;
+  margin-top: 40px;
+  justify-content: center;
+  height: 879px;
+
+}

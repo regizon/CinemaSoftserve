@@ -1,7 +1,7 @@
 
 .header1 {
     background-color: #1B1F3A;
-    height: 74px;
+    height: 78px;
 
 }
 .container1 {
@@ -13,6 +13,7 @@
 
 .logo1 {
     margin-left: 41.875%;
+    margin-top: 10px;
     font-size: 96px;
     font-family: Love Ya Like A Sister;
     font-weight: 400;
@@ -44,7 +45,7 @@
     color: white;
 }
 .main{
-    width: 1920px;
+    width: 100%;
     height: 1500px;
 }
 .main1{
@@ -55,8 +56,8 @@
     align-items:center;
     gap: 135px;
     height: 625px;
-    width: 1920px;
-
+    width: auto;
+    
 }
 
 .poster{
@@ -68,7 +69,6 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-
 }
 .film-caption {
     margin-top: 7px;
@@ -90,3 +90,199 @@
     height: 381px;
     background-color: #1B1F3A;
 }
+.group {
+    position: absolute;
+    width: 100%;
+    height: 249px;
+    background-color: #1b1f3a;
+    margin-top: auto; 
+  }
+  
+  
+  .element-svinkino {
+    position: absolute;
+    top: 194px;
+    left: 1691px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .union {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 41px;
+    left: 184px;
+  }
+  
+  .union-2 {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 86px;
+    left: 184px;
+  }
+  
+  .union-3 {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 131px;
+    left: 184px;
+  }
+  
+  .union-4 {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 176px;
+    left: 184px;
+  }
+  
+  .text-wrapper-9 {
+    position: absolute;
+    top: 44px;
+    left: 229px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-10 {
+    position: absolute;
+    top: 89px;
+    left: 229px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-11 {
+    position: absolute;
+    top: 134px;
+    left: 229px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-12 {
+    position: absolute;
+    top: 179px;
+    left: 229px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .svinkino {
+    position: absolute;
+    top: 72px;
+    left: 486px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .element {
+    position: absolute;
+    top: 72px;
+    left: 940px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-13 {
+    top: 72px;
+    left: 1210px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 14px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-14 {
+    top: 72px;
+    left: 1491px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 14px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-15 {
+    top: 41px;
+    left: 486px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-16 {
+    top: 41px;
+    left: 940px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-17 {
+    top: 41px;
+    left: 1210px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .text-wrapper-18 {
+    top: 41px;
+    left: 1492px;
+    font-family: "Alike-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 20px;
+    position: absolute;
+    letter-spacing: 0;
+    line-height: normal;
+  }
