@@ -7,9 +7,12 @@ import Profile from './pages/Profile.jsx';
 import Register from './pages/auth/register.jsx'; 
 import Login from './pages/auth/Login.jsx'; 
 
-import Footer from './Components/Main/Footer.jsx'
-import Header from './Components/Main/Header.jsx'
+import Footer from './Components/Main/Footer.jsx';
+import Header from './Components/Main/Header.jsx';
 import { Routes, Route } from 'react-router-dom';
+
+import FilmGrid from './Components/FilmGrid';
+import Carousel from './Components/Carousel';
 
 function App() {
 
