@@ -26,16 +26,21 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'session', 'session_time', 'movie_title', 'status']
+        fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'seat_number']
         read_only_fields = ['id', 'movie_title', 'session_time', 'status']
 
 
-    def validate_session(self, session):
-        booked_seats = Booking.objects.filter(session=session).count()
-        hall_capacity = session.hall.capacity
-        if booked_seats >= hall_capacity:
-            raise serializers.ValidationError("На обраний вами сеанс немає вільних місць")
-        return session
+    def validate(self, data):
+        session = data.get('session')
+        seat = data.get('seat_number')
+
+        if not seat:
+            raise serializers.ValidationError({'seat_number': 'Потрібно вказати місце'})
+
+        if Booking.objects.filter(session=session, seat_number=seat).exists():
+            raise serializers.ValidationError({'seat_number': 'Це місце вже зайняте'})
+            
+        return data
 
 class BookingCancelSerializer(serializers.ModelSerializer):
     class Meta:
