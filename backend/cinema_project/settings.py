@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@@4$v2d8ztboxb&lezo^=deob+wg$s2&n04=d5%6xzd#f&(!_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cinemasoftserve-8ejj.onrender.com']
+ALLOWED_HOSTS = ['cinemasoftserve-8ejj.onrender.com',"127.0.0.1"]
 
 
 # Application definition
@@ -57,7 +57,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://cinemasoftserve-8ejj.onrender.com"
+    "https://cinemasoftserve-8ejj.onrender.com",
+    "http://127.0.0.1:8000"
 ]
 
 ROOT_URLCONF = 'cinema_project.urls'
@@ -80,8 +81,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cinema_project.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -154,8 +153,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
 }
+
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 10,
 
 AUTH_USER_MODEL = 'cinema.User'

@@ -4,12 +4,13 @@ from rest_framework.permissions import IsAdminUser
 from cinema.models import Movie, Session, Booking, Genre, Hall, Director, Actor
 from cinema.public_api.serializers import MovieSerializer, SessionSerializer, BookingSerializer, GenreSerializer, \
     HallSerializer, DirectorSerializer, ActorSerializer
-
+from cinema.admin_api.Utils.pagination import AdminPagination
 
 class AdminMovieViewset(viewsets.ModelViewSet):
     queryset = Movie.objects.all().order_by('id')
     serializer_class = MovieSerializer
     permission_classes = (IsAdminUser,)
+    pagination_class = AdminPagination
 
 class AdminSessionViewset(viewsets.ModelViewSet):
     queryset = Session.objects.all()
