@@ -14,7 +14,7 @@ export default function FilmPage_Posters() {
   }, [id]);
 
   if (!movies) return <div>Загрузка...</div>;
-  const four_movies = movies.results.slice(0, 4); 
+  const four_movies = movies.slice(0, 4); 
   return (
     <div className="main-film">
       {four_movies.map(({ id, img_url, title, year, country, genre }) => (
