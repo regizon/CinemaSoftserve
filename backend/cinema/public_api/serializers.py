@@ -19,6 +19,7 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = '__all__'
+        read_only_fields = ['uuid']
 
 class BookingSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source='session.movie.title', read_only=True)

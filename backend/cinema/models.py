@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import uuid
 
 
 class RoleChoices(models.TextChoices):
@@ -43,6 +44,7 @@ class Director(models.Model):
         return self.director_name
 
 class Movie(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     title = models.CharField(max_length=120)
     original_title = models.CharField(max_length=120)
     slogan = models.CharField(max_length=200)

@@ -13,6 +13,7 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Movie.objects.filter(is_active=True)\
                             .prefetch_related('genres')
     serializer_class = MovieSerializer
+    lookup_field = 'uuid'
 
     @action(methods=['get'], detail=False)
     def genres(self, request):
