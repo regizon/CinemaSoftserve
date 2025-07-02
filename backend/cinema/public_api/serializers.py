@@ -24,24 +24,39 @@ class MovieSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source='session.movie.title', read_only=True)
     session_time = serializers.DateTimeField(source='session.start_time', read_only=True)
+    ticket_price = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Booking
-        fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'seat_number']
-        read_only_fields = ['id', 'movie_title', 'session_time', 'status']
-
+        fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'row', 'seat_number','ticket_price']
+        read_only_fields = ['id', 'movie_title', 'session_time', 'status','ticket_price']
 
     def validate(self, data):
         session = data.get('session')
+        row = data.get('row')
         seat = data.get('seat_number')
 
+        if row is None:
+            raise serializers.ValidationError({'row': 'Потрібно вказати ряд'})
         if not seat:
             raise serializers.ValidationError({'seat_number': 'Потрібно вказати місце'})
 
-        if Booking.objects.filter(session=session, seat_number=seat).exists():
+        if Booking.objects.filter(session=session, row=row, seat_number=seat, status=StatusChoices.BOOKED).exists():
             raise serializers.ValidationError({'seat_number': 'Це місце вже зайняте'})
-            
+
+        booked_count = Booking.objects.filter(session=session, status=StatusChoices.BOOKED).count()
+        if booked_count >= session.hall.capacity:
+            raise serializers.ValidationError("На обраний сеанс немає вільних місць")
+
         return data
+    
+    def get_ticket_price(self, obj):
+        vip_rows = obj.session.hall.get_vip_rows_list()
+        if obj.row in vip_rows:
+            return obj.session.vip_price if obj.session.vip_price > 0 else obj.session.price
+        return obj.session.price
+
 
 class BookingCancelSerializer(serializers.ModelSerializer):
     class Meta:
