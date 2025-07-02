@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Hall, Director, Actor
 from django.contrib.auth.hashers import make_password
-
+from django.utils import timezone
+from datetime import timedelta
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +21,11 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = '__all__'
         read_only_fields = ['uuid']
+
+    def create(self, validated_data):
+        if not validated_data.get('active_until'):
+            validated_data['active_until'] = timezone.now() + timedelta(days=14)
+        return super().create(validated_data)
 
 class BookingSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source='session.movie.title', read_only=True)

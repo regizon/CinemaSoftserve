@@ -12,7 +12,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
-    queryset = Movie.objects.filter(is_active=True).prefetch_related('genres')
     serializer_class = MovieSerializer
     lookup_field = 'uuid'
 
@@ -25,12 +24,17 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['year', 'title']
     search_fields = ['title', 'original_title', 'slogan']
 
+    def get_queryset(self):
+        now = timezone.now()
+        Movie.objects.filter(is_active=True, active_until__lt=now).update(is_active=False)
+        return Movie.objects.filter(is_active=True).prefetch_related('genres')
+
     @action(methods=['get'], detail=False)
     def genres(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
         return Response(serializer.data)
-
+    
 class PublicUserBooking(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]

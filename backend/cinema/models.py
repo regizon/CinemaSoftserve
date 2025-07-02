@@ -61,6 +61,7 @@ class Movie(models.Model):
     poster_url = models.URLField(max_length=200, null=True, blank=True)
     trailer_url = models.URLField(max_length=300)
     is_active = models.BooleanField(default=True)
+    active_until = models.DateTimeField(null=True, blank=True)
 
     genres = models.ManyToManyField(Genre, through='MovieGenre')
     actors = models.ManyToManyField(Actor, through='MovieActor')
