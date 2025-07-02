@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "cinema",
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    "django_filters"
 ]
 
 MIDDLEWARE = [
@@ -82,29 +83,29 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cinema_db_mkvz',
-        'USER': 'admin',
-        'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
-        'HOST': 'dpg-d1huiovfte5s73atse9g-a',
-        'PORT': '5432',
-    }
-}
-
-# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cinema_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
+#         'NAME': 'cinema_db_mkvz',
+#         'USER': 'admin',
+#         'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
+#         'HOST': 'dpg-d1huiovfte5s73atse9g-a',
 #         'PORT': '5432',
 #     }
 # }
+
+# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cinema_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation
