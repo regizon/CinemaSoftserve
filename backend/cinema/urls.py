@@ -1,9 +1,9 @@
 from django.urls import path, include
 
 from cinema.admin_api.views import AdminMovieViewset, AdminSessionViewset, AdminBookingViewset, AdminHallViewset, \
-    AdminActorViewset, AdminDirectorViewset
+    AdminActorViewset, AdminDirectorViewset, FindFilm
 from cinema.public_api.views import PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset, \
-    CancelBookingView
+    CancelBookingView, CheckProfile
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -27,4 +27,6 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/profile/', CheckProfile.as_view()),
+    path('api/v1/public/get_movie/', FindFilm.as_view()),
 ]

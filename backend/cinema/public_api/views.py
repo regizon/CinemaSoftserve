@@ -1,12 +1,15 @@
+from cProfile import Profile
+
+from django.http import Http404
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices
 from cinema.public_api.serializers import MovieSerializer, BookingSerializer, GenreSerializer, RegisterSerializer, \
-    SessionSerializer, BookingCancelSerializer
+    SessionSerializer, BookingCancelSerializer, ProfileSerializer
 
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
@@ -31,19 +34,23 @@ class PublicUserBooking(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+
 class CancelBookingView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Booking.objects.all()
     serializer_class = BookingCancelSerializer
 
     def get_object(self):
-        booking = super().get_object()
+        try:
+            booking = super().get_object()
+        except Http404:
+            raise NotFound(detail="Бронювання не знайдено", code="booking_not_found")
 
         if booking.user != self.request.user:
-            raise ValidationError("Бронювання належить іншому користувачу")
+            raise ValidationError("Бронювання належить іншому користувачу", code="not_owner")
 
         if booking.session.start_time <= timezone.now():
-            raise ValidationError("Неможливо скасувати: сеанс вже почався/завершився")
+            raise ValidationError("Неможливо скасувати: сеанс вже почався/завершився", code="too_late_to_cancel")
 
         return booking
 
@@ -61,3 +68,11 @@ class RegisterView(generics.CreateAPIView):
 class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
+
+
+class CheckProfile(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user

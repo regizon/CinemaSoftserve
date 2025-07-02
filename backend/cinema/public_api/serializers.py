@@ -20,7 +20,16 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = '__all__'
 
+class CustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def to_internal_value(self, data):
+        try:
+            return super().to_internal_value(data)
+        except serializers.ValidationError:
+            raise serializers.ValidationError("Сеанс не знайдено", code="session_not_found")
+
+
 class BookingSerializer(serializers.ModelSerializer):
+    session = CustomPrimaryKeyRelatedField(queryset=Session.objects.all())
     movie_title = serializers.CharField(source='session.movie.title', read_only=True)
     session_time = serializers.DateTimeField(source='session.start_time', read_only=True)
 
@@ -28,7 +37,6 @@ class BookingSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'seat_number']
         read_only_fields = ['id', 'movie_title', 'session_time', 'status']
-
 
     def validate(self, data):
         session = data.get('session')
@@ -39,8 +47,9 @@ class BookingSerializer(serializers.ModelSerializer):
 
         if Booking.objects.filter(session=session, seat_number=seat).exists():
             raise serializers.ValidationError({'seat_number': 'Це місце вже зайняте'})
-            
+
         return data
+
 
 class BookingCancelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,3 +96,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password')
