@@ -10,6 +10,7 @@ const slides = [
   ];
 
 export default function Carousel( {movies} ) {
+  
   const slides = movies.filter(
     movie => movie.poster_url && movie.poster_url.trim() !== ''
   );
