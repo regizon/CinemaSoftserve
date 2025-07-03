@@ -12,7 +12,7 @@ export default function Film() {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/v1/public/movies/${id}/`)
+    fetch(`/api/v1/public/movies/${id}/`)
       .then(res => res.json())
       .then(data => {
         console.log(data)

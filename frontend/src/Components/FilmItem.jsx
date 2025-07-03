@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function FilmItem({ id, img_url, title, year, country, genres }) {
+export default function FilmItem({ uuid, img_url, title, year, country, genres }) {
   const genreString = genres.join('/');
   return (
     <div className="poster">
       
       <div className="film-item">
-        <Link to={`/film/${id}`} >
+        <Link to={`/film/${uuid}`} >
         <img src={img_url} alt={title} />
         <div className="film-caption">{title}</div>
         </Link>

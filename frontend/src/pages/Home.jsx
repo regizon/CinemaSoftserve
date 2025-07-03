@@ -10,7 +10,7 @@ export default function  Home() {
     useEffect(() => {
       const fetchMovies = async () => {
         try {
-          const response = await fetch('http://127.0.0.1:8000/api/v1/public/movies/');
+          const response = await fetch('/api/v1/public/movies/');
           const data = await response.json();
           console.log('Полученные данные:', data);
           setMovies(data.results);
