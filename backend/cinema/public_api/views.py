@@ -4,8 +4,8 @@ from rest_framework import generics, viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices
-from cinema.public_api.serializers import MovieSerializer, BookingSerializer, GenreSerializer, RegisterSerializer, \
+from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor
+from cinema.public_api.serializers import MovieSerializer, BookingSerializer, ActorSerializer , GenreSerializer, RegisterSerializer, \
     SessionSerializer, BookingCancelSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -76,3 +76,7 @@ class RegisterView(generics.CreateAPIView):
 class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
+
+class PublicActorViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
