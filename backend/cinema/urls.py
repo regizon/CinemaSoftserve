@@ -2,8 +2,7 @@ from django.urls import path, include
 
 from cinema.admin_api.views import AdminMovieViewset, AdminSessionViewset, AdminBookingViewset, AdminHallViewset, \
     AdminActorViewset, AdminDirectorViewset
-from cinema.public_api.views import PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset, \
-    CancelBookingView
+from cinema.public_api.views import PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset,PublicActorViewSet, CancelBookingView
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -15,6 +14,7 @@ router = routers.SimpleRouter()
 router.register(r'public/movies', PublicMovieViewset,basename='public')
 router.register(r'admin/movies', AdminMovieViewset, basename='admin')
 router.register(r'public/sessions', PublicSessionViewset)
+router.register(r'public/actors', PublicActorViewSet, basename='public-actors')
 router.register(r'admin/sessions', AdminSessionViewset, basename='admin_sessions')
 router.register(r'admin/bookings', AdminBookingViewset)
 router.register(r'admin/halls', AdminHallViewset)
