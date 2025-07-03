@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-@@4$v2d8ztboxb&lezo^=deob+wg$s2&n04=d5%6xzd#f&(!_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['cinemasoftserve-8ejj.onrender.com','127.0.0.1']
 
 
 # Application definition
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "cinema",
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    "django_filters"
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,20 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cinema_db_mkvz',
+        'USER': 'admin',
+        'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
+        'HOST': 'dpg-d1huiovfte5s73atse9g-a',
+        'PORT': '5432',
+    }
+}
+
+# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
