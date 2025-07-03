@@ -12,3 +12,7 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'
+
+class MovieSearchSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    year = serializers.IntegerField()
