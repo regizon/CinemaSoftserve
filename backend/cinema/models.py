@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import uuid
 
 
 class RoleChoices(models.TextChoices):
@@ -43,6 +44,7 @@ class Director(models.Model):
         return self.director_name
 
 class Movie(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     title = models.CharField(max_length=120)
     original_title = models.CharField(max_length=120)
     slogan = models.CharField(max_length=200)
@@ -59,6 +61,7 @@ class Movie(models.Model):
     poster_url = models.URLField(max_length=200, null=True, blank=True)
     trailer_url = models.URLField(max_length=300)
     is_active = models.BooleanField(default=True)
+    active_until = models.DateTimeField(null=True, blank=True)
 
     genres = models.ManyToManyField(Genre, through='MovieGenre')
     actors = models.ManyToManyField(Actor, through='MovieActor')
@@ -93,6 +96,17 @@ class MovieDirector(models.Model):
 class Hall(models.Model):
     hall_number = models.PositiveIntegerField(unique=True)
     capacity = models.PositiveIntegerField()
+    vip_rows = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        help_text="Список номеров VIP рядов через запятую, например: 1,2,5"
+    )
+
+    def get_vip_rows_list(self):
+        if self.vip_rows:
+            return [int(r.strip()) for r in self.vip_rows.split(',') if r.strip().isdigit()]
+        return []
 
     def __str__(self):
         return f'Hall {self.hall_number}'
@@ -104,6 +118,7 @@ class Session(models.Model):
     start_time = models.DateTimeField()
     expire_time = models.DateTimeField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    vip_price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True) 
 
     def __str__(self):
         return f'{self.movie.title} at {self.start_time}'
@@ -113,11 +128,16 @@ class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     booked_at = models.DateTimeField(auto_now_add=True)
+    row = models.PositiveIntegerField()
+    seat_number = models.CharField(max_length=100)
     status    = models.CharField(
         max_length=2,
         choices=StatusChoices.choices,
         default=StatusChoices.BOOKED
     )
 
+    def is_vip(self):
+        return self.session.hall.is_vip_row(self.row)
+
     def __str__(self):
-        return f'Booking #{self.id} - {self.user.username}'
+        return f'Booking #{self.id} - {self.user.username} - Seat {self.seat_number}'

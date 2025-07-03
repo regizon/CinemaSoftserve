@@ -1,25 +1,40 @@
 from django.utils import timezone
 from rest_framework.views import APIView
-from rest_framework import generics, viewsets, permissions
+from rest_framework import generics, viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices
 from cinema.public_api.serializers import MovieSerializer, BookingSerializer, GenreSerializer, RegisterSerializer, \
     SessionSerializer, BookingCancelSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
-    queryset = Movie.objects.filter(is_active=True)\
-                            .prefetch_related('genres')
     serializer_class = MovieSerializer
+    lookup_field = 'uuid'
+
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_fields = {
+        'genres__genre_name': ['exact'],
+        'year': ['exact', 'gte', 'lte'],
+        'language': ['exact'],
+    }
+    ordering_fields = ['year', 'title']
+    search_fields = ['title', 'original_title', 'slogan']
+
+    def get_queryset(self):
+        now = timezone.now()
+        Movie.objects.filter(is_active=True, active_until__lt=now).update(is_active=False)
+        return Movie.objects.filter(is_active=True).prefetch_related('genres')
 
     @action(methods=['get'], detail=False)
     def genres(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
         return Response(serializer.data)
-
+    
 class PublicUserBooking(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]

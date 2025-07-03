@@ -1,0 +1,102 @@
+[
+    {
+        "model": "cinema.genre",
+        "pk": 1,
+        "fields": {
+            "genre_name": "Action"
+        }
+    },
+    {
+        "model": "cinema.genre",
+        "pk": 2,
+        "fields": {
+            "genre_name": "Comedy"
+        }
+    },
+    {
+        "model": "cinema.actor",
+        "pk": 1,
+        "fields": {
+            "actor_name": "Tom Cruise"
+        }
+    },
+    {
+        "model": "cinema.actor",
+        "pk": 2,
+        "fields": {
+            "actor_name": "Emma Stone"
+        }
+    },
+    {
+        "model": "cinema.director",
+        "pk": 1,
+        "fields": {
+            "director_name": "Christopher Nolan"
+        }
+    },
+    {
+        "model": "cinema.movie",
+        "pk": 1,
+        "fields": {
+            "uuid": "9eda58ea-9612-46d3-acee-3f24ef080abe",
+            "title": "Inception",
+            "original_title": "Inception",
+            "slogan": "Your mind is the scene of the crime",
+            "description": "A mind-bending thriller about dreams within dreams.",
+            "country": "USA",
+            "year": 2010,
+            "age_rate": 16,
+            "language": "EN",
+            "duration_minutes": 148,
+            "img_url": "https://example.com/inception.jpg",
+            "poster_url": "https://example.com/inception_poster.jpg",
+            "trailer_url": "https://youtube.com/inception_trailer",
+            "is_active": true
+        }
+    },
+    {
+        "model": "cinema.moviegenre",
+        "pk": 1,
+        "fields": {
+            "movie": 1,
+            "genre": 1
+        }
+    },
+    {
+        "model": "cinema.movieactor",
+        "pk": 1,
+        "fields": {
+            "movie": 1,
+            "actor": 1
+        }
+    },
+    {
+        "model": "cinema.moviedirector",
+        "pk": 1,
+        "fields": {
+            "movie": 1,
+            "director": 1
+        }
+    },
+    {
+        "model": "cinema.hall",
+        "pk": 1,
+        "fields": {
+            "hall_number": 1,
+            "capacity": 50,
+            "vip_rows": "1,10"
+        }
+    },
+    {
+        "model": "cinema.session",
+        "pk": 1,
+        "fields": {
+            "movie": 1,
+            "hall": 1,
+            "start_time": "2025-07-03T09:28:11.386938",
+            "expire_time": "2025-07-03T11:28:11.386938",
+            "price": "150.00",
+            "vip_price": "300.00"
+        }
+    }
+]
