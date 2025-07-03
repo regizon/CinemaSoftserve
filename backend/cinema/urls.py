@@ -1,8 +1,6 @@
 from django.urls import path, include
 
-from cinema.admin_api.views import AdminMovieViewset, AdminSessionViewset, AdminBookingViewset, AdminHallViewset, \
-    AdminActorViewset, AdminDirectorViewset, FindFilm
-    AdminActorViewset, AdminDirectorViewset
+from cinema.admin_api.views import AdminMovieViewset, AdminSessionViewset, AdminBookingViewset, AdminHallViewset, AdminActorViewset, AdminDirectorViewset, FindFilm, AdminActorViewset, AdminDirectorViewset
 from cinema.public_api.views import PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset,PublicActorViewSet, CancelBookingView, CheckProfile
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
