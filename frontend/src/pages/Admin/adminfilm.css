@@ -1,0 +1,166 @@
+.admin-panel {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+  gap: 20px;
+}
+
+.left-panel, .center-panel, .right-panel {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.left-panel {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.poster-upload {
+  width: 395px;
+  height: 589px;
+  background-color: #dcdcdc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.ticket-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 390px;
+  height: 95px;
+  margin-top: 15px;
+  padding: 0;
+  background-color: #eee;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 32px;
+  padding-right: 25px;
+}
+
+.center-panel {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.center-panel input,
+.center-panel textarea {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.center-panel textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.right-panel {
+  width: 25%;
+  gap: 10px;
+}
+
+.schedule-box {
+  background-color: #1B1F3A;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.schedule-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  justify-content: center;
+  display: flex;
+}
+
+.schedule-date {
+  background-color: #2c3155;
+  padding: 5px;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.schedule-time {
+  background-color: #2c3155;
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.add-session-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.add-session-form input,
+.add-session-form button {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.session-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.session-block input {
+  padding: 6px;
+  border-radius: 4px;
+  border: none;
+  flex: 1;
+  min-width: 120px;
+}
+
+.schedule-box button {
+  padding: 10px;
+  background-color: #3e4a7b;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.trailer {
+  margin: 40px auto;
+  text-align: center;
+}
+.date-label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #bbb;
+}
+.date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
