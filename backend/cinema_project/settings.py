@@ -103,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cinema_db_mkvz',
         'USER': 'admin',
-        'PASSWORD': 'gvR2CKwZAHtJKan0msBlzBU5bUxixYQJ',
+        'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
         'HOST': 'dpg-d1huiovfte5s73atse9g-a',
         'PORT': '5432',
     }
