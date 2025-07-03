@@ -13,7 +13,7 @@ export default function  Home() {
           const response = await fetch('http://127.0.0.1:8000/api/v1/public/movies/');
           const data = await response.json();
           console.log('Полученные данные:', data);
-          setMovies(data);
+          setMovies(data.results);
         } catch (error) {
           console.error("Ошибка при загрузке фильмов:", error);
         } finally {

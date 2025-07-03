@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './Auth.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -45,6 +47,7 @@ export default function Register() {
         setUsername('');
         setEmail('');
         setPassword('');
+        navigate('/profile')
       } else {
         setAlertMessage(
           data?.detail || 'Помилка під час реєстрації. Перевірте дані.'

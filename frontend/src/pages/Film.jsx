@@ -15,6 +15,7 @@ export default function Film() {
     fetch(`http://127.0.0.1:8000/api/v1/public/movies/${id}/`)
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         if (data.detail) {
           setNotFound(true); // если ответ содержит "detail", это ошибка
         } else {

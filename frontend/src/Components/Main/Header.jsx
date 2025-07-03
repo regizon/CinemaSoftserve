@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import { isTokenValid } from './auth.js';
+import { isTokenValid } from './Auth/auth.js';
 
 
 export  default function Footer() {

@@ -39,6 +39,7 @@ export default function Login() {
           localStorage.setItem('access', access);
 
           navigate('/profile')
+          window.location.reload();
         } else {
           setAlertMessage(
             data?.detail || 'Помилка під час реєстрації. Перевірте дані.'
