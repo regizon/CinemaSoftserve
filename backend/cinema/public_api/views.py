@@ -3,7 +3,7 @@ from cProfile import Profile
 from django.http import Http404
 from django.utils import timezone
 from rest_framework.views import APIView
-from rest_framework import generics, viewsets, permissions, filters
+from rest_framework import generics, viewsets, permissions, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
@@ -22,6 +22,11 @@ from cinema.public_api.serializers import (
 )
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.sites.shortcuts import get_current_site
+from cinema.utils import email_confirmation_token
+from django.core.mail import send_mail
 
 
 
@@ -88,8 +93,43 @@ class CancelBookingView(generics.UpdateAPIView):
         return Response({"success": "Бронювання скасовано"})
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=False)  
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = email_confirmation_token.make_token(user)
+        domain = get_current_site(self.request).domain
+
+        confirm_url = f"http://{domain}/api/v1/confirm-email/{uid}/{token}/"
+
+        send_mail(
+            subject='Підтвердіть ваш email',
+            message=f'Перейдіть за посиланням для підтвердження: {confirm_url}',
+            from_email='noreply@cinema.com',
+            recipient_list=[user.email],
+            fail_silently=False
+        )
+
+class ConfirmEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({"error": "Невірний UID"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user.is_active:
+            return Response({"message": "Користувач вже підтверджений"}, status=status.HTTP_200_OK)
+
+        if email_confirmation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({"message": "Email підтверджено успішно!"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Недійсний або прострочений токен"}, status=status.HTTP_400_BAD_REQUEST)
 
 class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Session.objects.all()

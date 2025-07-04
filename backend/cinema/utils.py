@@ -5,6 +5,8 @@ from rest_framework import status
 
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import APIException
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
 
 
 def custom_exception_handler(exc, context):
@@ -42,3 +44,10 @@ def custom_exception_handler(exc, context):
     return response
 
 
+class EmailConfirmationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+            str(user.pk) + str(timestamp) + str(user.is_active)
+        )
+
+email_confirmation_token = EmailConfirmationTokenGenerator()

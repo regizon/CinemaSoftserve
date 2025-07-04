@@ -119,7 +119,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
-        return super().create(validated_data)
+        user = super().create(validated_data)
+        user.is_active = False
+        user.save()
+        return user
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
