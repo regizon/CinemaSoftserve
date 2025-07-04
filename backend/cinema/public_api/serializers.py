@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Hall, Director, Actor
+from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Hall, Director, Actor, MovieDirector, \
+    MovieActor, MovieGenre
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
@@ -16,6 +17,20 @@ class MovieSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='genre_name'
     )
+    actors = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True,
+        required=False
+    )
+    director_name = serializers.CharField(
+        write_only=True,
+        required=False
+    )
+    genres_input = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True,
+        required=False
+    )
 
     class Meta:
         model = Movie
@@ -23,9 +38,28 @@ class MovieSerializer(serializers.ModelSerializer):
         read_only_fields = ['uuid']
 
     def create(self, validated_data):
+        actors = validated_data.pop("actors", [])
+        director_name = validated_data.pop("director_name", None)
+        genres = validated_data.pop("genres_input", [])
+
         if not validated_data.get('active_until'):
             validated_data['active_until'] = timezone.now() + timedelta(days=14)
-        return super().create(validated_data)
+
+        movie = super().create(validated_data)
+
+        if director_name:
+            director, _ = Director.objects.get_or_create(director_name=director_name)
+            MovieDirector.objects.get_or_create(movie=movie, director=director)
+
+        for actor_name in actors:
+            actor, _ = Actor.objects.get_or_create(actor_name=actor_name)
+            MovieActor.objects.get_or_create(movie=movie, actor=actor)
+
+        for genre_name in genres:
+            genre, _ = Genre.objects.get_or_create(genre_name=genre_name)
+            MovieGenre.objects.get_or_create(movie=movie, genre=genre)
+
+        return movie
 
 class CustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
     def to_internal_value(self, data):

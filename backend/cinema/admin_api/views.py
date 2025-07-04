@@ -147,19 +147,13 @@ class FindFilm(generics.CreateAPIView):
             "img_url": image_url,
             "poster_url": poster_url,
             "trailer_url": trailer_url or "https://www.youtube.com",
+            "genres": genre_list,
+            "actors": actor_list,
+            "director_name": director_name
         }
 
         movie_serializer = MovieSerializer(data=movie_data)
         movie_serializer.is_valid(raise_exception=True)
         movie = movie_serializer.save()
 
-        director_name, created = Director.objects.get_or_create(director_name=director_name)
-        MovieDirector.objects.get_or_create(movie=movie, director=director_name)
 
-        for genre_name in genre_list:
-            genre, created = Genre.objects.get_or_create(genre_name=genre_name)
-            MovieGenre.objects.get_or_create(movie=movie, genre=genre)
-
-        for actor in actor_list:
-            actor, created = Actor.objects.get_or_create(actor_name=actor)
-            MovieActor.objects.get_or_create(movie=movie, actor=actor)
