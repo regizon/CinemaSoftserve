@@ -6,6 +6,7 @@ import Film from './pages/Film.jsx';
 import Profile from './pages/Profile.jsx'; 
 import Register from './pages/auth/register.jsx'; 
 import Login from './pages/auth/Login.jsx'; 
+import UnLogin from './pages/auth/UnLogin.jsx'; 
 
 import Footer from './Components/Main/Footer.jsx';
 import Header from './Components/Main/Header.jsx';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin/add-movie" element={<PrivateRoute><AddMovie /></PrivateRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/unlogin" element={<UnLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
