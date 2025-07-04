@@ -59,8 +59,6 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
     "https://cinemasoftserve-8ejj.onrender.com"
 ]
 
@@ -87,16 +85,16 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cinema_db_mkvz',
-        'USER': 'admin',
-        'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
-        'HOST': 'dpg-d1huiovfte5s73atse9g-a',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cinema_db_mkvz',
+#         'USER': 'admin',
+#         'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
+#         'HOST': 'dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
 
