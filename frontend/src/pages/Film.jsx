@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import FilmPage_Content from '../Components/FilmPage_Content.jsx';
-import FilmPage_Posters from '../Components/FilmPage_Posters.jsx';
-import FilmPage_Trailer from '../Components/FilmPage_Trailer.jsx';
+import FilmPage_Content from '../Components/FilmPage/FilmPage_Content.jsx';
+import FilmPage_Posters from '../Components/FilmPage/FilmPage_Posters.jsx';
+import FilmPage_Trailer from '../Components/FilmPage/FilmPage_Trailer.jsx';
 import './Film.css';
 import NotFound from './NotFound.jsx';
 
