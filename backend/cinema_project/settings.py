@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-@@4$v2d8ztboxb&lezo^=deob+wg$s2&n04=d5%6xzd#f&(!_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['cinemasoftserve-8ejj.onrender.com','127.0.0.1']
 
 
@@ -58,8 +59,6 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
     "https://cinemasoftserve-8ejj.onrender.com"
 ]
 
@@ -85,6 +84,20 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cinema_db_mkvz',
+#         'USER': 'admin',
+#         'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
+#         'HOST': 'dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
+
+# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -95,8 +108,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
 
 # DATABASES = {
 #     'default': {
@@ -161,6 +172,16 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
+    'EXCEPTION_HANDLER': 'cinema.utils.custom_exception_handler'
 }
 
 AUTH_USER_MODEL = 'cinema.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'poposhka3456@gmail.com'  # 
+EMAIL_HOST_PASSWORD = 'rbzg ffjy dyfi gnud'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
