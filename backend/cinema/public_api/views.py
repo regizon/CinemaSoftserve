@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.permissions import AllowAny
-from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor
+from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
     MovieSerializer,
     BookingSerializer,
@@ -17,7 +17,8 @@ from cinema.public_api.serializers import (
     RegisterSerializer,
     SessionSerializer,
     BookingCancelSerializer,
-    ProfileSerializer
+    ProfileSerializer,
+    DirectorSerializer
 )
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
@@ -153,4 +154,18 @@ class ActorInfoView(APIView):
             "популярність": details.get("popularity"),
             "фото": f"https://image.tmdb.org/t/p/w500{details['profile_path']}" if details.get("profile_path") else None,
             "imdb_url": f"https://www.imdb.com/name/{details['imdb_id']}" if details.get("imdb_id") else None
+        })
+    
+class AllEntitiesView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        actors = Actor.objects.all()
+        genres = Genre.objects.all()
+        directors = Director.objects.all()
+
+        return Response({
+            "actors": ActorSerializer(actors, many=True).data,
+            "genres": GenreSerializer(genres, many=True).data,
+            "directors": DirectorSerializer(directors, many=True).data
         })
