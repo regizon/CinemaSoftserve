@@ -1,8 +1,10 @@
 import React from 'react';
 
-export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres, img_url, trailer_url }) {
+export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres, img_url, actors, directors }) {
 
   const genreString = genres.join(', ');
+  const actorsString = actors.join(', ');
+  const directorsString = directors.join(', ');
 return (
 <div className="film-container">
       <div className="film-poster">
@@ -30,17 +32,16 @@ return (
           <strong>Мова:</strong> {language}
         </p>
         <p>
-          <strong>Режисер:</strong> Едріан Моліна, Мадлен Шарафян, Домі Ші
+          <strong>Режисер:</strong> { directorsString }
         </p>
         <p>
-          <strong>Жанр:</strong> {genreString}, Комедії, Драми, Фантастика, Сімейні
+          <strong>Жанр:</strong> {genreString}
         </p>
         <p>
           <strong>Час:</strong> {duration_minutes}
         </p>
         <p>
-          <strong>У головних ролях:</strong> Йонас Кібріб, Америка Феррера,
-          Джаміла Джаміл, Бред Геррет, Зої Салдана та інші
+          <strong>У головних ролях:</strong> { actorsString } та інші
         </p>
         <h3>Опис фільму</h3>
         <p>

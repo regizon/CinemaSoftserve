@@ -10,7 +10,7 @@ import Login from './pages/auth/Login.jsx';
 import Footer from './Components/Main/Footer.jsx';
 import Header from './Components/Main/Header.jsx';
 import { Routes, Route } from 'react-router-dom';
-import PrivateRoute from './Components/Main/PrivateRoute.jsx';
+import PrivateRoute from './Components/Main/Auth/PrivateRoute.jsx';
 
 import AddMovie from './pages/Admin/adminfilm.jsx';
 

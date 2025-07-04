@@ -43,7 +43,7 @@ export default function Carousel( {movies} ) {
             key={movie.id}
             className={`carousel-item ${i === 0 ? 'active' : ''}`}
           >
-            <Link to={`/film/${movie.id}`} >
+            <Link to={`/film/${movie.uuid}`} >
             <img
               src={movie.poster_url}
               className="d-block w-100"
