@@ -51,32 +51,26 @@ export default function SessionsSchedule({
           <div className="session-block" key={idx}>
             {/* Время начала */}
             <input
-              type="time"
-              name={`session_start_${idx + 1}`}
-              value={session.startTime.slice(11,16) || ''}
-              onChange={e => {
-                const time = e.target.value;
-                const iso = sessionDate
-                  ? new Date(`${sessionDate}T${time}:00`).toISOString()
-                  : '';
-                handleChange(idx, 'startTime', iso);
-              }}
-              required
-            />
+                type="time"
+                name={`session_start_${idx + 1}`}
+                value={session.startTime || ''}
+                onChange={e => {
+                    const time = e.target.value;           
+                    handleChange(idx, 'startTime', time);  
+                }}
+                required
+                />
 
-            {/* Время окончания */}
-            <input
-              type="time"
-              name={`session_end_${idx + 1}`}
-              value={session.expireTime.slice(11,16) || ''}
-              onChange={e => {
-                const time = e.target.value;
-                const iso = sessionDate
-                  ? new Date(`${sessionDate}T${time}:00`).toISOString()
-                  : '';
-                handleChange(idx, 'expireTime', iso);
-              }}
-              required
+                {/* Время окончания */}
+                <input
+                type="time"
+                name={`session_end_${idx + 1}`}
+                value={session.expireTime || ''}
+                onChange={e => {
+                    const time = e.target.value;             
+                    handleChange(idx, 'expireTime', time);   
+                }}
+  required
             />
 
             {/* Выбор зала */}

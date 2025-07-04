@@ -15,6 +15,8 @@ export default function MovieForm({
   trailer_url, setTrailer,
   selectedDirectors, setSelectedDirectors,
   directorOptions,
+  selectedActors, setSelectedActors,
+  actorOptions,
   selectedGenres, setSelectedGenres,
   genreOptions,
   alertMessage, alertType,
@@ -60,7 +62,13 @@ export default function MovieForm({
 
       <input type="text" name="duration" placeholder="Час"
         value={duration_minutes} onChange={e => setDuration(e.target.value)} />
-      <input type="text" name="cast" placeholder="У головних ролях" />
+      <Select
+        placeholder="У головних ролях"
+        options={actorOptions}
+        isMulti
+        onChange={setSelectedActors}
+        value={selectedActors}
+      />
 
       <textarea name="description" placeholder="Опис фільму"
         value={description} onChange={e => setDescription(e.target.value)} />

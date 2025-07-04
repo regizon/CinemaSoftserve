@@ -6,7 +6,7 @@ from cinema.admin_api.serializers import MovieSearchSerializer
 from cinema.models import Movie, Session, Booking, Genre, Hall, Director, Actor, MovieGenre, MovieActor, MovieDirector
 from cinema.public_api.serializers import MovieSerializer, SessionSerializer, BookingSerializer, GenreSerializer, \
     HallSerializer, DirectorSerializer, ActorSerializer
-import requests
+# import requests
 
 class AdminMovieViewset(viewsets.ModelViewSet):
     queryset = Movie.objects.all().order_by('id')

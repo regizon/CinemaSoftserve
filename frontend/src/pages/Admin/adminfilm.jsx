@@ -7,34 +7,23 @@ import PosterPreview from '../../Components/Admin/PosterPreview.jsx';
 import SessionsSchedule from '../../Components/Admin/SessionsSchedule.jsx';
 import TrailerPlayer from '../../Components/Admin/TrailerPlayer.jsx';
 import { useHalls } from './useHalls.js';
+import { useMeta } from './useMeta.js';
 
 export default function AddMovie() {
   const token = localStorage.getItem('access');
 
+        
+  const {
+    actorOptions,
+    genreOptions,
+    directorOptions,
+  } = useMeta();
 
-  const directorOptions = [
-    { value: 'nolan', label: 'Кристофер Нолан' },
-    { value: 'scorsese', label: 'Мартін Скорсезе' },
-    { value: 'tarantino', label: 'Квентін Тарантіно' },
-    { value: 'spielberg', label: 'Стівен Спілберг' },
-  ];
-
-  const genreOptions = [
-    { value: 'action', label: 'Бойовик' },
-    { value: 'drama', label: 'Драма' },
-    { value: 'comedy', label: 'Комедія' },
-    { value: 'thriller', label: 'Трилер' },
-  ];
-          
   
-
-
-
-
-
   // Поля формы
   const [selectedDirectors, setSelectedDirectors] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedActors, setSelectedActors] = useState([]);
   const [createdMovie, setCreatedMovie] = useState(null);
 
   const [title, setTitle] = useState('');
@@ -74,6 +63,7 @@ export default function AddMovie() {
       active_until: '',
       directors: selectedDirectors.map((d) => d.value),
       genres: selectedGenres.map((g) => g.value),
+      actors: selectedActors.map((g) => g.value),
     };
 
     try {
@@ -201,6 +191,11 @@ export default function AddMovie() {
           selectedDirectors={selectedDirectors}
           setSelectedDirectors={setSelectedDirectors}
           directorOptions={directorOptions}
+
+          selectedActors={selectedActors}
+          setSelectedActors={setSelectedActors}
+          actorOptions={actorOptions}
+
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
           genreOptions={genreOptions}
