@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function FilmItem({ uuid, img_url, title, year, country, genres }) {
-  const genreString = genres.join('/');
+  const genreString = genres.slice(0, 2).join('/');
   return (
     <div className="poster">
       
