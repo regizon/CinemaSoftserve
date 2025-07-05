@@ -146,6 +146,14 @@ class PublicActorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
 
+
+class MovieSessions(generics.ListAPIView):
+    serializer_class = SessionSerializer
+
+    def get_queryset(self):
+        movie_id = self.kwargs['movie_id']
+        return Session.objects.filter(movie_id=movie_id)
+
 class ActorInfoView(APIView):
     permission_classes = [AllowAny]
 
