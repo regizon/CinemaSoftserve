@@ -46,7 +46,8 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         now = timezone.now()
         Movie.objects.filter(is_active=True, active_until__lt=now).update(is_active=False)
-        return Movie.objects.filter(is_active=True).prefetch_related('genres')
+        return Movie.objects.filter(is_active=True).prefetch_related('genres', 'actors', 'directors')
+
 
     @action(methods=['get'], detail=False)
     def genres(self, request):

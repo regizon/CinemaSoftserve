@@ -23,10 +23,12 @@ class MovieSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
+    actors_read = serializers.SerializerMethodField()
     directors = serializers.ListField(
         write_only=True,
         required=False
     )
+    directors_read = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
@@ -35,6 +37,12 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def get_genres_read(self, obj):
         return [genre.genre_name for genre in obj.genres.all()]
+
+    def get_actors_read(self, obj):
+        return [actor.actor_name for actor in obj.actors.all()]
+
+    def get_directors_read(self, obj):
+        return [director.director_name for director in obj.directors.all()]
 
     def create(self, validated_data):
         actors = validated_data.pop("actors", [])
