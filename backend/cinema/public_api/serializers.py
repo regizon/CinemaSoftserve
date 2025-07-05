@@ -12,22 +12,18 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MovieSerializer(serializers.ModelSerializer):
-    genres = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='genre_name'
+    genres = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True
     )
+    genres_read = serializers.SerializerMethodField()
+
     actors = serializers.ListField(
         child=serializers.CharField(),
         write_only=True,
         required=False
     )
-    director_name = serializers.CharField(
-        write_only=True,
-        required=False
-    )
-    genres_input = serializers.ListField(
-        child=serializers.CharField(),
+    directors = serializers.ListField(
         write_only=True,
         required=False
     )
@@ -37,17 +33,20 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['uuid']
 
+    def get_genres_read(self, obj):
+        return [genre.genre_name for genre in obj.genres.all()]
+
     def create(self, validated_data):
         actors = validated_data.pop("actors", [])
-        director_name = validated_data.pop("director_name", None)
-        genres = validated_data.pop("genres_input", [])
+        directors = validated_data.pop("directors", [])
+        genres = validated_data.pop("genres", [])
 
         if not validated_data.get('active_until'):
             validated_data['active_until'] = timezone.now() + timedelta(days=14)
 
         movie = super().create(validated_data)
 
-        if director_name:
+        for director_name in directors:
             director, _ = Director.objects.get_or_create(director_name=director_name)
             MovieDirector.objects.get_or_create(movie=movie, director=director)
 
@@ -60,6 +59,7 @@ class MovieSerializer(serializers.ModelSerializer):
             MovieGenre.objects.get_or_create(movie=movie, genre=genre)
 
         return movie
+
 
 class CustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
     def to_internal_value(self, data):
