@@ -21,8 +21,8 @@
 }
 
 .poster-upload {
-  width: 395px;
-  height: 589px;
+  width: 300px;
+  height: 450px;
   background-color: #dcdcdc;
   display: flex;
   justify-content: center;
@@ -36,7 +36,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 390px;
+  width: 300px;
   height: 95px;
   margin-top: 15px;
   padding: 0;
@@ -45,7 +45,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 32px;
-  padding-right: 25px;
+  padding-right: 10px;
 }
 
 .center-panel {
@@ -122,6 +122,9 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 15px;
+  padding-bottom: 1rem;      
+  margin-bottom: 1rem;       
+  border-bottom: 1px solid #fff; 
 }
 
 .session-block input {

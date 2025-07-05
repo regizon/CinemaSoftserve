@@ -1,10 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
+import Shedule from './FilmPage_Schedule';
+import SheduleEdit from './FilmPage_ScheduleEdit';
 
 export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres, img_url, actors, directors }) {
 
   const genreString = genres.join(', ');
   const actorsString = actors.join(', ');
+
   const directorsString = directors.join(', ');
+  const [isEditing, setIsEditing] = useState(false); // переключатель
+
+  const handleToggle = () => {
+    setIsEditing(prev => !prev);
+  };
 return (
 <div className="film-container">
       <div className="film-poster">
@@ -49,31 +57,14 @@ return (
         </p>
         
       </div>
-      <div className="film-schedule">
-        <div className="schedule-header">
-          <span>Розклад сеансів</span>
-          <select>
-            <option>Пт, 21 червня</option>
-          </select>
-        </div>
-        <ul>
-          <li>
-            <span className="hall-name">Червоний зал</span>
-            <br />
-            <a href="#">9:15</a>
-          </li>
-          <li>
-            <span className="hall-name">Червоний зал</span>
-            <br />
-            <a href="#">13:15</a>
-          </li>
-          <li>
-            <span className="hall-name">Синій зал</span>
-            <br />
-            <a href="#">17:20 3D</a>
-          </li>
-        </ul>
+      
+        <div className="film-poster">
+          {isEditing ? <SheduleEdit /> : <Shedule />}
+          <button className="btn btn-secondary mt-2" onClick={handleToggle} style={{ backgroundColor: '#ffffff', color: '#1B1F3A', width: '130px', height: '50px', fontSize: '20px', marginLeft: '250px', marginTop: '140px'}}>
+              {isEditing ? 'Перегляд' : 'Редагувати'}
+          </button>
       </div>
+      
     </div>
     );
 }

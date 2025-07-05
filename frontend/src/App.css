@@ -70,6 +70,11 @@
     align-items: center;
     text-align: center;
 }
+.film-item img { 
+  max-height: 525px;
+  width: 320px;
+}
+
 .film-caption {
     margin-top: 7px;
     font-size: 32px;

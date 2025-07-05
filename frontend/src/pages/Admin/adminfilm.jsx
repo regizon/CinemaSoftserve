@@ -1,110 +1,222 @@
-import React from "react"
-import './adminfilm.css'
+import React, { useState, useEffect } from 'react';
+import './adminfilm.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function AddMovie(){
+import MovieForm from '../../Components/Admin/MovieFrom.jsx';
+import PosterPreview from '../../Components/Admin/PosterPreview.jsx';
+import SessionsSchedule from '../../Components/Admin/SessionsSchedule.jsx';
+import TrailerPlayer from '../../Components/Admin/TrailerPlayer.jsx';
+import { useHalls } from './useHalls.js';
+import { useMeta } from './useMeta.js';
+
+export default function AddMovie() {
+  const token = localStorage.getItem('access');
+
+        
+  const {
+    actorOptions,
+    genreOptions,
+    directorOptions,
+  } = useMeta();
+
+  
+  // Поля формы
+  const [selectedDirectors, setSelectedDirectors] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedActors, setSelectedActors] = useState([]);
+  const [createdMovie, setCreatedMovie] = useState(null);
+
+  const [title, setTitle] = useState('');
+  const [slogan, setSlogan] = useState('');
+  const [age_rate, setAge] = useState('');
+  const [country, setCountry] = useState('');
+  const [original_title, setOriginalTitle] = useState('');
+  const [language, setLanguage] = useState('');
+  const [duration_minutes, setDuration] = useState('');
+  const [description, setDescription] = useState('');
+  const [trailer_url, setTrailer] = useState('');
+  const [img_url, setImg] = useState('');
+  const [year, setYear] = useState('');
+
+  const [alertMessage, setAlertMessage] = useState(null);
+  const [alertType, setAlertType] = useState('');
+
+  
+
+  const handleMovieSubmit = async (e) => {
+    e.preventDefault();
+
+    const movieData = {
+      title,
+      original_title,
+      slogan,
+      description,
+      country,
+      year,
+      age_rate,
+      language,
+      duration_minutes,
+      img_url,
+      poster_url: '',
+      trailer_url,
+      is_active: true,
+      active_until: '',
+      directors: selectedDirectors.map((d) => d.value),
+      genres: selectedGenres.map((g) => g.value),
+      actors: selectedActors.map((g) => g.value),
+    };
+
+    try {
+      const response = await fetch('/api/v1/admin/movies/', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(movieData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAlertMessage('Фільм додано!');
+        setAlertType('success');
+        setCreatedMovie(data);
+      } else {
+        setAlertMessage(data?.detail || 'Помилка під час додавання. Перевірте дані.');
+        setAlertType('danger');
+      }
+    } catch (error) {
+      console.error('Помилка при запиті:', error);
+      setAlertMessage('Сервер недоступний. Спробуйте пізніше.');
+      setAlertType('danger');
+    }
+  };
+
+  // Сеансы
+  const [sessionDate, setSessionDate] = useState('');
+  const [sessions, setSessions] = useState([
+    { startTime: '', expireTime: '', hall: '', price: '', vip_price: '' },
+    { startTime: '', expireTime: '', hall: '', price: '', vip_price: '' },
+    { startTime: '', expireTime: '', hall: '', price: '', vip_price: '' },
+  ]);
+
+  const handleSessionChange = (index, field, value) => {
+    const updatedSessions = [...sessions];
+    updatedSessions[index][field] = value;
+    setSessions(updatedSessions);
+  };
+
+  const handleScheduleSubmit = async e => {
+    e.preventDefault();
+    if (!createdMovie) {
+      alert('Фільм не створено');
+      return;
+    }
+  
+    // Оставляем только полностью заполненные
+    const valid = sessions
+      .filter(s => s.startTime && s.expireTime && s.hall && s.price)
+      .map(s => ({
+        start_time:  s.startTime,
+        expire_time: s.expireTime,
+        price:       s.price,
+        vip_price:   s.vip_price || '-',
+        movie:       createdMovie.id,
+        hall:        Number(s.hall),
+      }));
+  
+    try {
+      // Для каждого сеанса — отдельный POST
+      const results = await Promise.all(
+        valid.map(session =>
+          fetch('/api/v1/admin/sessions/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(session),
+          })
+        )
+      );
+  
+      // Проверяем, все ли запросы прошли успешно
+      if (results.every(r => r.ok)) {
+        alert('Усі сеанси збережено!');
+      } else {
+        const errors = await Promise.all(results.map(r => r.json()));
+        console.error('ПОМІЛКИ:', errors);
+        alert('Деякі сеанси не збережено. Перевір консоль.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Сервер недоступний.');
+    }
+  };
+
+  const { hallOptions, loading, error } = useHalls(token);
+
+  if (loading) return <div>Загрузка залів…</div>;
+  if (error)   return <div>Помилка завантаження. Перевірте з'єднання</div>;
+
   return (
     <>
       <div className="admin-panel">
-        {/* Ліва частина */}
-        <div className="left-panel">
-          <div className="poster-upload">+</div>
-          <button className="ticket-btn">Придбати квиток</button>
-        </div>
-        {/* Центральна частина */}
-        <form method="POST" encType="multipart/form-data" className="center-panel">
-          <input type="text" name="title" placeholder="Назва" />
-          <input type="text" name="slogan" placeholder="Слоган" />
-          <input type="text" name="release_date" placeholder="Дата виходу" />
-          <input type="text" name="age_limit" placeholder="Вікові обмеження" />
-          <input type="text" name="country" placeholder="Країна" />
-          <input
-            type="text"
-            name="original_title"
-            placeholder="Оригінальна назва"
-          />
-          <input type="text" name="language" placeholder="Мова" />
-          <input type="text" name="director" placeholder="Режисер" />
-          <input type="text" name="genre" placeholder="Жанр" />
-          <input type="text" name="duration" placeholder="Час" />
-          <input type="text" name="cast" placeholder="У головних ролях" />
-          <textarea
-            name="description"
-            placeholder="Опис фільму"
-            defaultValue={""}
-          />
-          <input
-            type="url"
-            name="trailer_link"
-            placeholder="Посилання на відео (YouTube)"
-          />
-          <button type="submit">Зберегти фільм</button>
-        </form>
-        {/* Права частина: Розклад сеансів */}
-        <div className="right-panel">
-          <form method="POST" action="/submit-sessions" className="schedule-box">
-            <div className="schedule-title">
-              <h3>Розклад сеансів</h3>
-            </div>
-            <label htmlFor="session_date" className="date-label">
-              Обрати дату сеансів
-            </label>
-            <input
-              type="date"
-              id="session_date"
-              name="session_date"
-              className="date-input"
-              required=""
-            />
-            {/* Сеанс 1 */}
-            <div className="session-block">
-              <input type="time" name="session_time_1" />
-              <input type="text" name="session_hall_1" placeholder="Зал" />
-              <input
-                type="text"
-                name="session_format_1"
-                placeholder="Формат (2D, 3D)"
-              />
-            </div>
-            {/* Сеанс 2 */}
-            <div className="session-block">
-              <input type="time" name="session_time_2" />
-              <input type="text" name="session_hall_2" placeholder="Зал" />
-              <input
-                type="text"
-                name="session_format_2"
-                placeholder="Формат (2D, 3D)"
-              />
-            </div>
-            {/* Сеанс 3 */}
-            <div className="session-block">
-              <input type="time" name="session_time_3" />
-              <input type="text" name="session_hall_3" placeholder="Зал" />
-              <input
-                type="text"
-                name="session_format_3"
-                placeholder="Формат (2D, 3D)"
-              />
-            </div>
-            {/* Кнопка збереження */}
-            <div className="button-wrapper">
-              <button type="submit">Зберегти розклад</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      {/* Відео трейлер */}
-      <div className="trailer">
-        <iframe
-          width={560}
-          height={315}
-          src="{{ trailer_link|default:'https://www.youtube.com/embed/' }}"
-          title="Офіційний трейлер"
-          frameBorder={0}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen=""
-        ></iframe>
-      </div>
-    </>
+        <PosterPreview img_url={img_url} />
 
+        <MovieForm
+          title={title}
+          setTitle={setTitle}
+          slogan={slogan}
+          setSlogan={setSlogan}
+          year={year}
+          setYear={setYear}
+          age_rate={age_rate}
+          setAge={setAge}
+          country={country}
+          setCountry={setCountry}
+          original_title={original_title}
+          setOriginalTitle={setOriginalTitle}
+          language={language}
+          setLanguage={setLanguage}
+          duration_minutes={duration_minutes}
+          setDuration={setDuration}
+          description={description}
+          setDescription={setDescription}
+          img_url={img_url}
+          setImg={setImg}
+          trailer_url={trailer_url}
+          setTrailer={setTrailer}
+          selectedDirectors={selectedDirectors}
+          setSelectedDirectors={setSelectedDirectors}
+          directorOptions={directorOptions}
+
+          selectedActors={selectedActors}
+          setSelectedActors={setSelectedActors}
+          actorOptions={actorOptions}
+
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genreOptions={genreOptions}
+          alertMessage={alertMessage}
+          alertType={alertType}
+          handleMovieSubmit={handleMovieSubmit}
+        />
+
+      <SessionsSchedule
+          createdMovie={createdMovie}
+          sessionDate={sessionDate}
+          setSessionDate={setSessionDate}
+          sessions={sessions}
+          setSessions={setSessions}
+          hallOptions={hallOptions}
+          handleScheduleSubmit={handleScheduleSubmit}
+          token={token}
+        />
+      </div>
+
+      <TrailerPlayer trailer_url={trailer_url} />
+    </>
   );
 }
