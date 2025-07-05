@@ -43,7 +43,7 @@ export default function SessionsSchedule({
           className="date-input"
           value={sessionDate}
           onChange={e => setSessionDate(e.target.value)}
-          required
+          
         />
 
         {/* Три блока сеансів */}
@@ -58,7 +58,7 @@ export default function SessionsSchedule({
                     const time = e.target.value;           
                     handleChange(idx, 'startTime', time);  
                 }}
-                required
+                
                 />
 
                 {/* Время окончания */}
@@ -70,7 +70,7 @@ export default function SessionsSchedule({
                     const time = e.target.value;             
                     handleChange(idx, 'expireTime', time);   
                 }}
-  required
+  
             />
 
             {/* Выбор зала */}
@@ -95,7 +95,7 @@ export default function SessionsSchedule({
               placeholder="Ціна"
               value={session.price}
               onChange={e => handleChange(idx, 'price', e.target.value)}
-              required
+              
             />
 
             {/* VIP-ціна */}

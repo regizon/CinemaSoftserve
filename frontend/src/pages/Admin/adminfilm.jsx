@@ -60,7 +60,7 @@ export default function AddMovie() {
       poster_url: '',
       trailer_url,
       is_active: true,
-      active_until: '',
+      active_until: null,
       directors: selectedDirectors.map((d) => d.value),
       genres: selectedGenres.map((g) => g.value),
       actors: selectedActors.map((g) => g.value),
@@ -117,14 +117,18 @@ export default function AddMovie() {
     // Оставляем только полностью заполненные
     const valid = sessions
       .filter(s => s.startTime && s.expireTime && s.hall && s.price)
-      .map(s => ({
-        start_time:  s.startTime,
-        expire_time: s.expireTime,
-        price:       s.price,
-        vip_price:   s.vip_price || '-',
-        movie:       createdMovie.id,
-        hall:        Number(s.hall),
-      }));
+      .map(s => {
+        const start_time = `${sessionDate}T${s.startTime}`;
+        const expire_time = `${sessionDate}T${s.expireTime}`;
+
+        return {
+          start_time,
+          expire_time,
+          price: s.price,
+          vip_price: s.vip_price || '-',
+          movie: createdMovie.id,
+          hall: Number(s.hall),
+          };});
   
     try {
       // Для каждого сеанса — отдельный POST
