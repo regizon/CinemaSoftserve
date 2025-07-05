@@ -36,6 +36,7 @@ export default function AddMovie() {
   const [description, setDescription] = useState('');
   const [trailer_url, setTrailer] = useState('');
   const [img_url, setImg] = useState('');
+  const [poster_url, setPoster] = useState('');
   const [year, setYear] = useState('');
 
   const [alertMessage, setAlertMessage] = useState(null);
@@ -190,6 +191,8 @@ export default function AddMovie() {
           setDescription={setDescription}
           img_url={img_url}
           setImg={setImg}
+          poster_url={poster_url}
+          setPoster={setPoster}
           trailer_url={trailer_url}
           setTrailer={setTrailer}
           selectedDirectors={selectedDirectors}

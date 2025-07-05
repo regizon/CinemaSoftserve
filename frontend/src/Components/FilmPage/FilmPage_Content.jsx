@@ -1,25 +1,14 @@
 import React, {useState} from 'react';
-import Shedule from './FilmPage_Schedule';
-import SheduleEdit from './FilmPage_ScheduleEdit';
 
-export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres, img_url, actors, directors }) {
+export default function FilmPage_Content({ title, original_title, slogan, description, country, year, age_rate, language, duration_minutes, genres_read, actors_read, directors_read }) {
 
-  const genreString = genres.join(', ');
-  const actorsString = actors.join(', ');
+  const genreString = Array.isArray(genres_read) ? genres_read.join('/') : '';
+  const actorsString = Array.isArray(actors_read) ? actors_read.join('/') : '';
+  const directorsString = Array.isArray(directors_read) ? directors_read.join('/') : '';
 
-  const directorsString = directors.join(', ');
-  const [isEditing, setIsEditing] = useState(false); // переключатель
 
-  const handleToggle = () => {
-    setIsEditing(prev => !prev);
-  };
 return (
-<div className="film-container">
-      <div className="film-poster">
-        <img src={img_url} alt={title} />
-        <button className="buy-button">Придбати квиток</button>
-      </div>
-      <div className="film-info">
+<div>
         <h1>{title}</h1>
         <p>
           <strong>Слоган:</strong> {slogan}
@@ -55,16 +44,6 @@ return (
         <p>
           {description}
         </p>
-        
-      </div>
-      
-        <div className="film-poster">
-          {isEditing ? <SheduleEdit /> : <Shedule />}
-          <button className="btn btn-secondary mt-2" onClick={handleToggle} style={{ backgroundColor: '#ffffff', color: '#1B1F3A', width: '130px', height: '50px', fontSize: '20px', marginLeft: '250px', marginTop: '140px'}}>
-              {isEditing ? 'Перегляд' : 'Редагувати'}
-          </button>
-      </div>
-      
     </div>
     );
 }

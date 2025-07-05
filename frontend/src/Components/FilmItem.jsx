@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function FilmItem({ uuid, img_url, title, year, country, genres }) {
-  const genreString = Array.isArray(genres) ? genres.slice(0, 2).join('/') : '';
+
+export default function FilmItem({ uuid, img_url, title, year, country, genres_read }) {
+
+  const genreString = Array.isArray(genres_read) ? genres_read.slice(0, 2).join('/') : '';
 
   return (
     <div className="poster">

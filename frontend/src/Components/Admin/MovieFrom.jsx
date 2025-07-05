@@ -112,6 +112,7 @@ export default function MovieForm({
   duration_minutes, setDuration,
   description, setDescription,
   img_url, setImg,
+  poster_url, setPoster,
   trailer_url, setTrailer,
   selectedDirectors, setSelectedDirectors,
   directorOptions,
@@ -209,6 +210,9 @@ export default function MovieForm({
 
       <input type="url" name="image_link" placeholder="Посилання на фото"
         value={img_url} onChange={e => setImg(e.target.value)} />
+
+      <input type="url" name="poster_link" placeholder="Посилання на постер (якщо необхідно)"
+        value={poster_url} onChange={e => setPoster(e.target.value)} />
 
       <input type="url" name="trailer_link" placeholder="Посилання на відео (YouTube)"
         value={trailer_url} onChange={e => setTrailer(e.target.value)} />
