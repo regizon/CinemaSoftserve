@@ -152,6 +152,12 @@ class MovieSessions(generics.ListAPIView):
 
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
+
+        try:
+            movie = Movie.objects.get(id=movie_id, is_active=True)
+        except Movie.DoesNotExist:
+            raise Http404("Такого фільму не знайдено або він не активний")
+
         return Session.objects.filter(movie_id=movie_id)
 
 class ActorInfoView(APIView):
