@@ -19,7 +19,7 @@ class User(AbstractUser):
         choices=RoleChoices.choices,
         default=RoleChoices.USER
     )
-
+    phone_number = models.CharField(max_length=13, default="", blank=True)
     def __str__(self):
         return self.username
 
