@@ -11,6 +11,7 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = '__all__'
 
+
 class MovieSerializer(serializers.ModelSerializer):
     genres = serializers.ListField(
         child=serializers.CharField(),
@@ -24,6 +25,7 @@ class MovieSerializer(serializers.ModelSerializer):
         required=False
     )
     actors_read = serializers.SerializerMethodField()
+
     directors = serializers.ListField(
         write_only=True,
         required=False
@@ -54,17 +56,27 @@ class MovieSerializer(serializers.ModelSerializer):
 
         movie = super().create(validated_data)
 
+        # Используем только get() - без создания новых записей
         for director_name in directors:
-            director, _ = Director.objects.get_or_create(director_name=director_name)
-            MovieDirector.objects.get_or_create(movie=movie, director=director)
+            try:
+                director = Director.objects.get(director_name=director_name)
+                MovieDirector.objects.get_or_create(movie=movie, director=director)
+            except Director.DoesNotExist:
+                continue
 
         for actor_name in actors:
-            actor, _ = Actor.objects.get_or_create(actor_name=actor_name)
-            MovieActor.objects.get_or_create(movie=movie, actor=actor)
+            try:
+                actor = Actor.objects.get(actor_name=actor_name)
+                MovieActor.objects.get_or_create(movie=movie, actor=actor)
+            except Actor.DoesNotExist:
+                continue
 
         for genre_name in genres:
-            genre, _ = Genre.objects.get_or_create(genre_name=genre_name)
-            MovieGenre.objects.get_or_create(movie=movie, genre=genre)
+            try:
+                genre = Genre.objects.get(genre_name=genre_name)
+                MovieGenre.objects.get_or_create(movie=movie, genre=genre)
+            except Genre.DoesNotExist:
+                continue
 
         return movie
 
