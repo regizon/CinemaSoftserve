@@ -16,25 +16,33 @@
   height: 590px;
   border-radius: 6px;
   display: flex;
-
   margin-top: 214px;
 }
 
-.buy-button {
-    width: 396px;
-    height: 95px;
-    margin-top: 15px;
-    background-color: #526FE2;
+.buy-button, .delete-button { 
+    
     color: white;
     border: none;
-    padding: 10px 20px;
+    width: 396px;
     font-size: 36px;
     font-family: Inter;
     border-radius: 15px;
     cursor: pointer;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
+.buy-button{
+  margin-bottom: 20px;
+  background-color: #526FE2;
+  height: 95px;
+  margin-top: 15px;
+  padding: 10px 20px;
+}
+.delete-button{
+  background-color: #e25252;
+  height: 70px;
+  }
 .film-info {
 
     margin-top: 214px;

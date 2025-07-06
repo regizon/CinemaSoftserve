@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 import Carousel from '../Components/Carousel.jsx';
 import FilmGrid from '../Components/FilmGrid.jsx';
@@ -38,7 +39,7 @@ export default function  Home() {
           <a href="#" className="nav">Скоро у КІНО!</a>
         </nav>
       </div>
-
+      <Link to="/admin/add-movie"><button className="btn" style={{ backgroundColor: '#1B1F3A', color: '#ffffff', width: '100px', height: '50px', fontSize: '20px', marginLeft: '117px', marginTop: '20px' }}>Додати</button></Link>
       <FilmGrid movies={movies}/>
     </>
   );

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,7 +59,9 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
     "https://cinemasoftserve-8ejj.onrender.com"
 ]
 
@@ -91,35 +94,30 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 #         'NAME': 'cinema_db_mkvz',
 #         'USER': 'admin',
 #         'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
-#         'HOST': 'dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com',
+#         'HOST': 'dpg-d1huiovfte5s73atse9g-a',
 #         'PORT': '5432',
 #     }
 # }
 
 # dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cinema_db_mkvz',
-        'USER': 'admin',
-        'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
-        'HOST': 'dpg-d1huiovfte5s73atse9g-a',
+        'NAME': 'cinema_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cinema_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -176,12 +174,3 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'cinema.User'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = 'poposhka3456@gmail.com'  # 
-EMAIL_HOST_PASSWORD = 'rbzg ffjy dyfi gnud'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

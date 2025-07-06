@@ -19,7 +19,7 @@ class User(AbstractUser):
         choices=RoleChoices.choices,
         default=RoleChoices.USER
     )
-
+    phone_number = models.CharField(max_length=13, default="", blank=True)
     def __str__(self):
         return self.username
 
@@ -71,14 +71,14 @@ class Movie(models.Model):
         return self.title
 
 class MovieActor(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     actor = models.ForeignKey(Actor, on_delete=models.PROTECT)
 
     class Meta:
         unique_together = ('movie', 'actor')
 
 class MovieGenre(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.PROTECT)
 
     class Meta:
@@ -86,7 +86,7 @@ class MovieGenre(models.Model):
 
 
 class MovieDirector(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.PROTECT)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     director = models.ForeignKey(Director, on_delete=models.PROTECT)
 
     class Meta:

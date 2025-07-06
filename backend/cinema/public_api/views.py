@@ -1,5 +1,3 @@
-from cProfile import Profile
-
 from django.http import Http404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils import timezone
@@ -20,8 +18,11 @@ from cinema.public_api.serializers import (
     SessionSerializer,
     BookingCancelSerializer,
     ProfileSerializer,
-    DirectorSerializer
+    DirectorSerializer,
+    BaseMovieSerializer,
+    ManualMovieSerializer
 )
+
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -33,7 +34,7 @@ from django.core.mail import send_mail
 
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
-    serializer_class = MovieSerializer
+    serializer_class = BaseMovieSerializer
     lookup_field = 'uuid'
 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
@@ -48,7 +49,8 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         now = timezone.now()
         Movie.objects.filter(is_active=True, active_until__lt=now).update(is_active=False)
-        return Movie.objects.filter(is_active=True).prefetch_related('genres')
+        return Movie.objects.filter(is_active=True).prefetch_related('genres', 'actors', 'directors')
+
 
     @action(methods=['get'], detail=False)
     def genres(self, request):
@@ -147,6 +149,20 @@ class CheckProfile(generics.RetrieveUpdateAPIView):
 class PublicActorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+
+class MovieSessions(generics.ListAPIView):
+    serializer_class = SessionSerializer
+
+    def get_queryset(self):
+        movie_id = self.kwargs['movie_id']
+
+        try:
+            movie = Movie.objects.get(id=movie_id, is_active=True)
+        except Movie.DoesNotExist:
+            raise Http404("Такого фільму не знайдено або він не активний")
+
+        return Session.objects.filter(movie_id=movie_id)
 
 class ActorInfoView(APIView):
     permission_classes = [AllowAny]

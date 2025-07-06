@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import FilmPage_Content from '../Components/FilmPage_Content.jsx';
-import FilmPage_Posters from '../Components/FilmPage_Posters.jsx';
-import FilmPage_Trailer from '../Components/FilmPage_Trailer.jsx';
+import FilmPage_Main from '../Components/FilmPage/FilmPage_Main.jsx';
+import FilmPage_Posters from '../Components/FilmPage/FilmPage_Posters.jsx';
+import FilmPage_Trailer from '../Components/FilmPage/FilmPage_Trailer.jsx';
 import './Film.css';
 import NotFound from './NotFound.jsx';
+
 
 export default function Film() {
   const { id } = useParams();            
@@ -29,7 +30,7 @@ export default function Film() {
 
   return (
     <div className="film">
-    <FilmPage_Content {...movie}/>
+    <FilmPage_Main movie={movie}/>
     <FilmPage_Trailer {...movie}/>
     <FilmPage_Posters />
     </div>

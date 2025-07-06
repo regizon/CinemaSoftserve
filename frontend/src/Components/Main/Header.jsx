@@ -12,7 +12,7 @@ export  default function Footer() {
             <h1 className="logo1"><a href="/">Svinkino</a></h1>
             {isAuth ? (
             <p className="login-link1">
-                <Link to="/profile">Профіль</Link>
+                <Link to="/profile">Профіль</Link> / <Link to="/unlogin">Вийти</Link>
             </p>
             ) : (
             <p className="login-link1">

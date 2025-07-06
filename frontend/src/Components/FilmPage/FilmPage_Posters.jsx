@@ -17,13 +17,13 @@ export default function FilmPage_Posters() {
   const four_movies = movies.results.slice(0, 4); 
   return (
     <div className="main-film">
-      {four_movies.map(({ uuid, img_url, title, year, country, genre }) => (
+      {four_movies.map(({ uuid, img_url, title, year, country, genres_read }) => (
         <div key={uuid} className="poster-film">
           <Link to={`/film/${uuid}`}>
             <div className="film-item1">
               <img src={img_url} alt={title} />
               <div className="film-caption1">{title}</div>
-              <div className="film-caption3">{`${year}, ${country}, ${genre}`}</div>
+              <div className="film-caption3">{`${year}, ${country}, ${Array.isArray(genres_read) ? genres_read.slice(0, 2).join('/') : ''}`}</div>
             </div>
           </Link>
         </div>
