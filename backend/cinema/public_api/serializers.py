@@ -6,7 +6,8 @@ from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
 
-from cinema.utils import MovieRelationMixin
+from cinema.mixins.movie_relation_mixin import MovieRelationMixin
+
 
 
 class GenreSerializer(serializers.ModelSerializer):
