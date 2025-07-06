@@ -3,6 +3,7 @@ export function isTokenValid(token) {
 
   try {
     const decoded = jwtDecode(token);
+    console.log(decoded)
     if (!decoded.exp) return false;
 
     const currentTime = Math.floor(Date.now() / 1000);

@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from cinema.admin_api.views import AdminMovieViewset, AdminSessionViewset, AdminBookingViewset, AdminHallViewset, AdminActorViewset, AdminDirectorViewset, FindFilm, AdminActorViewset, AdminDirectorViewset
-from cinema.public_api.views import AllEntitiesView, ConfirmEmailView, CustomTokenObtainPairView, PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset,PublicActorViewSet, CancelBookingView, CheckProfile, ActorInfoView
+from cinema.public_api.views import AllEntitiesView, ConfirmEmailView, CustomTokenObtainPairView, MovieSessions, PublicMovieViewset, PublicUserBooking, RegisterView, PublicSessionViewset,PublicActorViewSet, CancelBookingView, CheckProfile, ActorInfoView
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
