@@ -1,16 +1,19 @@
 import React, { createContext, useState, useEffect } from 'react';
-import isTokenValid from './auth.js'
+import { getUserRole } from './auth.js';
+
 export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // при старте читаем из localStorage (если токен остался)
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access');
     if (token) {
-        isTokenValid(token)
-      setUser({ token });
+      const { isValid, role } = getUserRole(token);
+
+      if (isValid) {
+        setUser({ token, role });
+      }
     }
   }, []);
 

@@ -2,9 +2,12 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import Carousel from '../Components/Carousel.jsx';
 import FilmGrid from '../Components/FilmGrid.jsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import {AuthContext} from '../Components/Main/Auth/AuthProvider.jsx'
 
 export default function  Home() {
+  const { user } = useContext(AuthContext);
+
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -39,7 +42,9 @@ export default function  Home() {
           <a href="#" className="nav">Скоро у КІНО!</a>
         </nav>
       </div>
+      {user?.role == 'AD' && (
       <Link to="/admin/add-movie"><button className="btn" style={{ backgroundColor: '#1B1F3A', color: '#ffffff', width: '100px', height: '50px', fontSize: '20px', marginLeft: '117px', marginTop: '20px' }}>Додати</button></Link>
+      )}
       <FilmGrid movies={movies}/>
     </>
   );

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Shedule from './FilmPage_Schedule';
 import SheduleEdit from './FilmPage_ScheduleEdit';
 import { useNavigate } from 'react-router-dom';
 import FilmPage_ContentEdit from './FilmPage_ContentEdit';
 import FilmPage_Content from './FilmPage_Content';
 import { useMeta } from '../../pages/Admin/useMeta';
+import { AuthContext } from '../Main/Auth/AuthProvider.jsx';
 
 export default function FilmPage_Main({ movie }) {
   const token = localStorage.getItem('access');
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [isSessionEditing, setIsSessionEditing] = useState(false);
@@ -176,7 +178,9 @@ export default function FilmPage_Main({ movie }) {
       <div className="film-poster">
         <img src={movie.img_url} alt={movie.title} />
         <button className="buy-button">Придбати квиток</button>
+        {user?.role == 'AD' && (
         <button onClick={handleDelete} className="delete-button">Видалити</button>
+        )}
       </div>
 
       <div className="film-info">
@@ -215,19 +219,22 @@ export default function FilmPage_Main({ movie }) {
         ) : (
           <FilmPage_Content {...movie} />
         )}
-
-        <button className="btn btn-secondary mt-2" onClick={handleToggleMovie}
-          style={{ backgroundColor: '#ffffff', color: '#1B1F3A', width: '130px', height: '50px', fontSize: '20px', marginLeft: '250px', marginTop: '140px'}}>
-          {isMovieEditing ? 'Перегляд' : 'Редагувати'}
-        </button>
+        {user?.role == 'AD' && (
+          <button className="btn btn-secondary mt-2" onClick={handleToggleMovie}
+            style={{ backgroundColor: '#ffffff', color: '#1B1F3A', width: '130px', height: '50px', fontSize: '20px', marginLeft: '250px', marginTop: '140px'}}>
+            {isMovieEditing ? 'Перегляд' : 'Редагувати'}
+          </button>
+        )}
       </div>
 
       <div className="film-poster">
         {isSessionEditing ? <SheduleEdit /> : <Shedule />}
+        {user?.role == 'AD' && (
         <button className="btn btn-secondary mt-2" onClick={handleToggle}
           style={{ backgroundColor: '#ffffff', color: '#1B1F3A', width: '130px', height: '50px', fontSize: '20px', marginLeft: '250px', marginTop: '140px'}}>
           {isSessionEditing ? 'Перегляд' : 'Редагувати'}
         </button>
+        )}
       </div>
     </div>
   );
