@@ -5,6 +5,8 @@ from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, H
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 from cinema.mixins.movie_relation_mixin import MovieRelationMixin
 
@@ -265,3 +267,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password', 'phone_number')
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['role'] = user.role 
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['role'] = self.user.role 
+        return data
