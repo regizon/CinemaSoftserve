@@ -4,14 +4,14 @@ from rest_framework.permissions import IsAdminUser
 
 from cinema.admin_api.serializers import MovieSearchSerializer
 from cinema.models import Movie, Session, Booking, Genre, Hall, Director, Actor, MovieGenre, MovieActor, MovieDirector
-from cinema.public_api.serializers import MovieSerializer, SessionSerializer, BookingSerializer, GenreSerializer, \
-    HallSerializer, DirectorSerializer, ActorSerializer
+from cinema.public_api.serializers import ManualMovieSerializer, SessionSerializer, BookingSerializer, GenreSerializer, \
+    HallSerializer, DirectorSerializer, ActorSerializer, BaseMovieSerializer
 import requests
 
 class AdminMovieViewset(viewsets.ModelViewSet):
     queryset = Movie.objects.all().order_by('id')
-    serializer_class = MovieSerializer
     permission_classes = (IsAdminUser,)
+    serializer_class = ManualMovieSerializer
 
 class AdminSessionViewset(viewsets.ModelViewSet):
     queryset = Session.objects.all()

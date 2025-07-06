@@ -1,5 +1,3 @@
-from cProfile import Profile
-
 from django.http import Http404
 from django.utils import timezone
 from rest_framework.views import APIView
@@ -10,7 +8,6 @@ from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.permissions import AllowAny
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
-    MovieSerializer,
     BookingSerializer,
     ActorSerializer,
     GenreSerializer,
@@ -18,7 +15,7 @@ from cinema.public_api.serializers import (
     SessionSerializer,
     BookingCancelSerializer,
     ProfileSerializer,
-    DirectorSerializer
+    DirectorSerializer, BaseMovieSerializer, ManualMovieSerializer
 )
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
@@ -31,7 +28,7 @@ from django.core.mail import send_mail
 
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
-    serializer_class = MovieSerializer
+    serializer_class = BaseMovieSerializer
     lookup_field = 'uuid'
 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]

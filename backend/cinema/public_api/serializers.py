@@ -6,13 +6,15 @@ from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
 
+from cinema.utils import MovieRelationMixin
+
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = '__all__'
 
-
-class MovieSerializer(serializers.ModelSerializer):
+class BaseMovieSerializer(serializers.ModelSerializer):
     genres = serializers.ListField(
         child=serializers.CharField(),
         write_only=True
@@ -27,6 +29,7 @@ class MovieSerializer(serializers.ModelSerializer):
     actors_read = serializers.SerializerMethodField()
 
     directors = serializers.ListField(
+        child=serializers.CharField(),
         write_only=True,
         required=False
     )
@@ -46,6 +49,8 @@ class MovieSerializer(serializers.ModelSerializer):
     def get_directors_read(self, obj):
         return [director.director_name for director in obj.directors.all()]
 
+
+class ManualMovieSerializer(BaseMovieSerializer, MovieRelationMixin):
     def create(self, validated_data):
         actors = validated_data.pop("actors", [])
         directors = validated_data.pop("directors", [])
@@ -55,31 +60,107 @@ class MovieSerializer(serializers.ModelSerializer):
             validated_data['active_until'] = timezone.now() + timedelta(days=14)
 
         movie = super().create(validated_data)
-
-        # Используем только get() - без создания новых записей
-        for director_name in directors:
-            try:
-                director = Director.objects.get(director_name=director_name)
-                MovieDirector.objects.get_or_create(movie=movie, director=director)
-            except Director.DoesNotExist:
-                continue
-
-        for actor_name in actors:
-            try:
-                actor = Actor.objects.get(actor_name=actor_name)
-                MovieActor.objects.get_or_create(movie=movie, actor=actor)
-            except Actor.DoesNotExist:
-                continue
-
-        for genre_name in genres:
-            try:
-                genre = Genre.objects.get(genre_name=genre_name)
-                MovieGenre.objects.get_or_create(movie=movie, genre=genre)
-            except Genre.DoesNotExist:
-                continue
-
+        self._assign_relations(movie, actors, directors, genres, create_if_missing=False)
         return movie
 
+
+# class MovieSerializer(serializers.ModelSerializer):
+#     genres = serializers.ListField(
+#         child=serializers.CharField(),
+#         write_only=True
+#     )
+#     genres_read = serializers.SerializerMethodField()
+#
+#     actors = serializers.ListField(
+#         child=serializers.CharField(),
+#         write_only=True,
+#         required=False
+#     )
+#     actors_read = serializers.SerializerMethodField()
+#
+#     directors = serializers.ListField(
+#         child=serializers.CharField(),
+#         write_only=True,
+#         required=False
+#     )
+#     directors_read = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = Movie
+#         fields = '__all__'
+#         read_only_fields = ['uuid']
+#
+#     def get_genres_read(self, obj):
+#         return [genre.genre_name for genre in obj.genres.all()]
+#
+#     def get_actors_read(self, obj):
+#         return [actor.actor_name for actor in obj.actors.all()]
+#
+#     def get_directors_read(self, obj):
+#         return [director.director_name for director in obj.directors.all()]
+#
+#     def create(self, validated_data):
+#         actors = validated_data.pop("actors", [])
+#         directors = validated_data.pop("directors", [])
+#         genres = validated_data.pop("genres", [])
+#
+#         if not validated_data.get('active_until'):
+#             validated_data['active_until'] = timezone.now() + timedelta(days=14)
+#
+#
+#         movie = super().create(validated_data)
+#
+#         # Создание связей с директорами (поиск по ID)
+#         for director_id in directors:
+#             try:
+#                 director = Director.objects.get(id=director_id)
+#                 MovieDirector.objects.get_or_create(movie=movie, director=director)
+#             except Director.DoesNotExist:
+#                 continue
+#
+#         for actor_id in actors:
+#             try:
+#                 actor = Actor.objects.get(id=actor_id)
+#                 MovieActor.objects.get_or_create(movie=movie, actor=actor)
+#             except Actor.DoesNotExist:
+#                 continue
+#
+#         for genre_id in genres:
+#             try:
+#                 genre = Genre.objects.get(id=genre_id)
+#                 MovieGenre.objects.get_or_create(movie=movie, genre=genre)
+#             except Genre.DoesNotExist:
+#                 continue
+#
+#         return movie
+
+    # def _assign_relations(self, movie, actors, directors, genres):
+    #     self._add_relation(actors, Actor, MovieActor, 'actor_name', 'actor', movie)
+    #     self._add_relation(directors, Director, MovieDirector, 'director_name', 'director', movie)
+    #     self._add_relation(genres, Genre, MovieGenre, 'genre_name', 'genre', movie)
+    #
+    # def _add_relation(self, items, model_class, through_model, lookup_field, related_field, movie):
+    #     for item in items:
+    #         try:
+    #             instance = model_class.objects.get(**{lookup_field: item})
+    #             through_model.objects.get_or_create(movie=movie, **{related_field: instance})
+    #         except model_class.DoesNotExist:
+    #             continue
+
+
+
+class ParserMovieSerializer(BaseMovieSerializer, MovieRelationMixin):
+    def create(self, validated_data):
+        actors = validated_data.pop("actors", [])
+        directors = validated_data.pop("directors", [])
+        genres = validated_data.pop("genres", [])
+
+        if not validated_data.get('active_until'):
+            validated_data['active_until'] = timezone.now() + timedelta(days=14)
+
+        movie = super().create(validated_data)
+        self._assign_relations(movie, actors, directors, genres, create_if_missing=True)
+        return movie
 
 class CustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
     def to_internal_value(self, data):

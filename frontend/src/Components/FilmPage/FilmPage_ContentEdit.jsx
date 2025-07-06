@@ -2,18 +2,19 @@ import React from 'react';
 import Select from 'react-select';
 
 export default function FilmPage_ContentEdit({
-  title, setTitle,
-  slogan, setSlogan,
-  year, setYear,
-  age_rate, setAge,
-  country, setCountry,
-  original_title, setOriginalTitle,
-  language, setLanguage,
-  duration_minutes, setDuration,
-  description, setDescription,
-  img_url, setImg,
-  poster_url, setPoster,
-  trailer_url, setTrailer,
+  title,
+  slogan,
+  year,
+  age_rate,
+  country,
+  original_title,
+  language,
+  duration_minutes,
+  description,
+  img_url,
+  poster_url,
+  trailer_url,
+  onFieldChange,
   selectedDirectors, setSelectedDirectors,
   directorOptions,
   selectedActors, setSelectedActors,
@@ -25,25 +26,26 @@ export default function FilmPage_ContentEdit({
 }) {
   return (
     <form
-      method="POST"
-      encType="multipart/form-data"
       className="center-panel"
-      onSubmit={handleMovieSubmit}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleMovieSubmit();
+      }}
     >
       <input type="text" name="title" placeholder="title"
-        value={title} onChange={e => setTitle(e.target.value)} />
+        value={title} onChange={e => onFieldChange('title', e.target.value)} />
       <input type="text" name="slogan" placeholder="slogan"
-        value={slogan} onChange={e => setSlogan(e.target.value)} />
+        value={slogan} onChange={e => onFieldChange('slogan', e.target.value)} />
       <input type="text" name="year" placeholder="year"
-        value={year} onChange={e => setYear(e.target.value)} />
+        value={year} onChange={e => onFieldChange('year', e.target.value)} />
       <input type="text" name="age_limit" placeholder="Вікові обмеження"
-        value={age_rate} onChange={e => setAge(e.target.value)} />
+        value={age_rate} onChange={e => onFieldChange('age_rate', e.target.value)} />
       <input type="text" name="country" placeholder="Країна"
-        value={country} onChange={e => setCountry(e.target.value)} />
+        value={country} onChange={e => onFieldChange('country', e.target.value)} />
       <input type="text" name="original_title" placeholder="Оригінальна назва"
-        value={original_title} onChange={e => setOriginalTitle(e.target.value)} />
+        value={original_title} onChange={e => onFieldChange('original_title', e.target.value)} />
       <input type="text" name="language" placeholder="Мова"
-        value={language} onChange={e => setLanguage(e.target.value)} />
+        value={language} onChange={e => onFieldChange('language', e.target.value)} />
 
       <Select
         placeholder="Режисери"
@@ -62,7 +64,7 @@ export default function FilmPage_ContentEdit({
       />
 
       <input type="text" name="duration" placeholder="Час"
-        value={duration_minutes} onChange={e => setDuration(e.target.value)} />
+        value={duration_minutes} onChange={e => onFieldChange('duration_minutes', e.target.value)} />
       <Select
         placeholder="У головних ролях"
         options={actorOptions}
@@ -72,16 +74,16 @@ export default function FilmPage_ContentEdit({
       />
 
       <textarea name="description" placeholder="Опис фільму"
-        value={description} onChange={e => setDescription(e.target.value)} />
+        value={description} onChange={e => onFieldChange('description', e.target.value)} />
 
       <input type="url" name="image_link" placeholder="Посилання на фото"
-        value={img_url} onChange={e => setImg(e.target.value)} />
+        value={img_url} onChange={e => onFieldChange('img_url', e.target.value)} />
 
       <input type="url" name="poster_link" placeholder="Посилання на постер (якщо необхідно)"
-        value={poster_url} onChange={e => setPoster(e.target.value)} />
+        value={poster_url} onChange={e => onFieldChange('poster_url', e.target.value)} />
 
       <input type="url" name="trailer_link" placeholder="Посилання на відео (YouTube)"
-        value={trailer_url} onChange={e => setTrailer(e.target.value)} />
+        value={trailer_url} onChange={e => onFieldChange('trailer_url', e.target.value)} />
 
       <button type="submit">Зберегти фільм</button>
 
