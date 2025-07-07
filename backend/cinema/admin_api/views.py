@@ -6,7 +6,6 @@ from cinema.admin_api.serializers import MovieSearchSerializer
 from cinema.models import Movie, Session, Booking, Genre, Hall, Director, Actor, MovieGenre, MovieActor, MovieDirector
 from cinema.public_api.serializers import ManualMovieSerializer, SessionSerializer, BookingSerializer, GenreSerializer, \
     HallSerializer, DirectorSerializer, ActorSerializer, BaseMovieSerializer, ParserMovieSerializer
-import requests
 
 class AdminMovieViewset(viewsets.ModelViewSet):
     queryset = Movie.objects.all().order_by('id')
@@ -47,7 +46,7 @@ class AdminActorViewset(viewsets.ModelViewSet):
 
 class FindFilm(generics.CreateAPIView):
     queryset = Movie.objects.all()
-    serializer_class = MovieSearchSerializer
+    serializer_class = ParserMovieSerializer
     #permission_classes = (IsAdminUser,)
 
 
