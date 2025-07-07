@@ -92,14 +92,15 @@ class CustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
 class BookingSerializer(serializers.ModelSerializer):
     session = CustomPrimaryKeyRelatedField(queryset=Session.objects.all())
     movie_title = serializers.CharField(source='session.movie.title', read_only=True)
+    movie_img_url = serializers.CharField(source='session.movie.img_url', read_only=True)
     session_time = serializers.DateTimeField(source='session.start_time', read_only=True)
     ticket_price = serializers.SerializerMethodField()
 
 
     class Meta:
         model = Booking
-        fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'row', 'seat_number','ticket_price']
-        read_only_fields = ['id', 'movie_title', 'session_time', 'status','ticket_price']
+        fields = ['id', 'session', 'session_time', 'movie_title', 'status', 'row', 'seat_number','ticket_price', 'movie_img_url']
+        read_only_fields = ['id', 'movie_title', 'session_time', 'status','ticket_price', 'movie_img_url']
 
     def validate(self, data):
       session = data.get('session')

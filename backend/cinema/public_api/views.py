@@ -10,7 +10,6 @@ from rest_framework.permissions import AllowAny
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
     CustomTokenObtainPairSerializer,
-    MovieSerializer,
     BookingSerializer,
     ActorSerializer,
     GenreSerializer,
