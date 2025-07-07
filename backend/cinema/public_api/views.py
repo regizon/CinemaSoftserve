@@ -1,4 +1,5 @@
 from django.http import Http404
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets, permissions, filters, status
@@ -8,6 +9,8 @@ from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.permissions import AllowAny
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
+    CustomTokenObtainPairSerializer,
+    MovieSerializer,
     BookingSerializer,
     ActorSerializer,
     GenreSerializer,
@@ -15,8 +18,11 @@ from cinema.public_api.serializers import (
     SessionSerializer,
     BookingCancelSerializer,
     ProfileSerializer,
-    DirectorSerializer, BaseMovieSerializer, ManualMovieSerializer
+    DirectorSerializer,
+    BaseMovieSerializer,
+    ManualMovieSerializer
 )
+
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -221,3 +227,6 @@ class AllEntitiesView(APIView):
             "genres": GenreSerializer(genres, many=True).data,
             "directors": DirectorSerializer(directors, many=True).data
         })
+    
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
