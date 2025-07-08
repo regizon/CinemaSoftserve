@@ -54,50 +54,50 @@ export default function Login() {
     };
 
 
-    return( 
-        <div className="wrapper">
+    return(
+        <div className="wrapper" style={{marginTop: '120px'}}>
             <div className="container">
                 <h1 className="title">Вхід до особистого кабінету</h1>
                 {alertMessage && (
-                <div className={`alert alert-${alertType} mt-3`} role="alert">
-                    {alertMessage}
-                </div>
+                    <div className={`alert alert-${alertType} mt-3`} role="alert">
+                        {alertMessage}
+                    </div>
                 )}
                 <form className="form" onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    className="input full"
-                    required=""
-                    value={username} onChange={(e) => setUserName(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    className="input full"
-                    required=""
-                    value={password} onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit" className="submit-btn">
-                    Увійти
-                </button>
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        className="input full"
+                        required=""
+                        value={username} onChange={(e) => setUserName(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Пароль"
+                        className="input full"
+                        required=""
+                        value={password} onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button type="submit" className="submit-btn">
+                        Увійти
+                    </button>
                 </form>
                 <div className="divider">
-                <hr />
-                <span>Або увійдіть за допомогою</span>
-                <hr />
+                    <hr/>
+                    <span>Або увійдіть за допомогою</span>
+                    <hr/>
                 </div>
                 <button className="google-btn">
-                <img
-                    src="https://www.svgrepo.com/show/475656/google-color.svg"
-                    alt="Google"
-                    className="google-icon"
-                />
-                Продовжити за допомогою Google
+                    <img
+                        src="https://www.svgrepo.com/show/475656/google-color.svg"
+                        alt="Google"
+                        className="google-icon"
+                    />
+                    Продовжити за допомогою Google
                 </button>
-                <Link  to="/" className="back-link">⬅ Повернутись назад на сайт <strong>Svinkino</strong></Link>
+                <Link to="/" className="back-link">⬅ Повернутись назад на сайт <strong>Svinkino</strong></Link>
             </div>
-            </div>
+        </div>
 
     );
 }

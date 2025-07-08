@@ -139,16 +139,29 @@ class BookingCancelSerializer(serializers.ModelSerializer):
 
 class SessionSerializer(serializers.ModelSerializer):
     available_seats = serializers.SerializerMethodField()
+    hall_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Session
-        fields = '__all__'
+        fields = [
+            'id',
+            'movie',
+            'hall',
+            'hall_name',
+            'start_time',
+            'expire_time',
+            'price',
+            'vip_price',
+            'available_seats',
+        ]
 
     def get_available_seats(self, obj):
         total = obj.hall.capacity
         booked = Booking.objects.filter(session=obj, status=StatusChoices.BOOKED).count()
         return total - booked
 
+    def get_hall_name(self, obj):
+        return f"Зал {obj.hall.hall_number}"
 
 class HallSerializer(serializers.ModelSerializer):
     class Meta:

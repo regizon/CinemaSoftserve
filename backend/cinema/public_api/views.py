@@ -99,7 +99,8 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def perform_create(self, serializer):
-        user = serializer.save(is_active=False)  
+        user = serializer.save(is_active=False)
+        email = serializer.save(is_active=False)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = email_confirmation_token.make_token(user)
         domain = get_current_site(self.request).domain
@@ -138,6 +139,16 @@ class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
 
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['movie', 'hall']
+    ordering_fields = ['start_time']
+    ordering = ['start_time']
+
+    def get_queryset(self):
+        return super().get_queryset()
+        # from django.utils import timezone
+        # queryset = queryset.filter(start_time__gte=timezone.now())
+        # return queryset
 class CheckProfile(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
