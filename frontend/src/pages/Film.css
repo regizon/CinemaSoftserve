@@ -1,14 +1,16 @@
-.film{
-    height: 2151px;
-    margin-top: -125px;
+
+
+body {
+    margin: 0;
+    padding: 0;
 }
+
 .film-container {
   display: flex;
   justify-content: space-between;
   gap: 65px;
   color: black;
-  padding: 0 100px;
-
+  padding: 0 100px; /* 👈 верхний отступ */
 }
 
 .film-poster img {
@@ -19,8 +21,8 @@
   margin-top: 214px;
 }
 
-.buy-button, .delete-button { 
-    
+.buy-button, .delete-button {
+
     color: white;
     border: none;
     width: 396px;
@@ -44,11 +46,22 @@
   height: 70px;
   }
 .film-info {
-
     margin-top: 214px;
     flex: 2;
     font-size: 24px;
-    max-width: 739px;
+}
+
+.film-info.editing {
+  max-width: 100% !important;
+  flex: 2 1 100%;
+  width: 100%;
+}
+
+.center-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+  box-sizing: border-box;
 }
 
 .film-info h1 {
@@ -67,10 +80,12 @@
   color: white;
   border-radius: 8px;
   width: 380px;
-  height: 700px;
   margin-top: 215px;
-
-
+  overflow-y: auto;              /* ✅ включаем вертикальный скролл */
+  padding-top: 20px;             /* ✅ отступ сверху, чтобы контент не прилипал */
+  padding-bottom: 20px;          /* дополнительный отступ снизу */
+  scrollbar-width: thin;         /* для Firefox */
+    min-height: 700px;
 }
 
 .film-schedule select {
@@ -84,7 +99,79 @@
 
 
 }
+.film-schedule-edit {
+  background-color: #1B1F3A;
+  color: white;
+  width: 600px;
+  min-height: 800px;    /* Минимум — достаточно высоко */
+  margin-top: 215px;
+  overflow-y: auto;
+  border-radius: 8px;
+  padding: 30px;
+  box-sizing: border-box;
+  font-size: 18px;
+}
 
+.schedule-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* займёт всю доступную высоту */
+  overflow-y: auto;
+  padding-bottom: 80px; /* отступ под кнопку */
+  box-sizing: border-box;
+}
+
+/* Кнопка будет всегда внизу формы */
+.button-wrapper {
+  position: sticky;
+  bottom: 0;
+  background-color: #1B1F3A;
+  padding: 15px 0;
+  text-align: center;
+  z-index: 1;
+}
+
+
+/* Кнопка "Зберегти розклад" */
+.button-wrapper button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  background-color: #526FE2;
+  color: white;
+  cursor: pointer;
+}
+
+/* Блок каждого сеанса */
+.session-block {
+  padding: 10px 15px;
+}
+
+/* Поля формы */
+.session-block input,
+.session-block .select__control {
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Кнопка удаления */
+.session-block button {
+  background-color: #e25252;
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Заголовок */
+.schedule-box h3 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+}
 .film-schedule ul {
   list-style: none;
   padding-left: 0;
@@ -126,10 +213,10 @@
   margin-left: 43px;
 
 }
-.trailer{
-    margin-top: 160px;
-    display: flex;
-    justify-content: center;
+.trailer {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
 }
 .poster-film img {
     width: 100%;
@@ -280,4 +367,14 @@
   justify-content: center;
   height: 879px;
 
+}
+
+.left-column {
+  flex: 2;
+  max-width: 50%;
+}
+
+.right-column {
+  flex: 1;
+  max-width: 28%;
 }

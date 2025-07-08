@@ -27,10 +27,7 @@ export default function FilmPage_ContentEdit({
   return (
     <form
       className="center-panel"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleMovieSubmit();
-      }}
+      onSubmit={(e) => handleMovieSubmit(e)} // ✅ передаём e
     >
       <input type="text" name="title" placeholder="title"
         value={title} onChange={e => onFieldChange('title', e.target.value)} />

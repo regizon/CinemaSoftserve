@@ -61,40 +61,45 @@ export default function Register() {
     }
   };
   return ( <>
-    <div className="wrapper">
-      <div className="container">
-        <h1 className="title">Реєстрація</h1>
+        <div className="wrapper" style={{marginTop: '120px'}}>
+          <div className="container">
+            <h1 className="title">Реєстрація</h1>
             {alertMessage && (
-            <div className={`alert alert-${alertType} mt-3`} role="alert">
-                {alertMessage}
-            </div>
+                <div className={`alert alert-${alertType} mt-3`} role="alert">
+                  {alertMessage}
+                </div>
             )}
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="input-row">
-            <input type="text" placeholder="Ім’я" className="input" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-            <input type="text" placeholder="Прізвище" className="input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <form className="form" onSubmit={handleSubmit}>
+              <div className="input-row">
+                <input type="text" placeholder="Ім’я" className="input" value={firstName}
+                       onChange={(e) => setFirstName(e.target.value)}/>
+                <input type="text" placeholder="Прізвище" className="input" value={lastName}
+                       onChange={(e) => setLastName(e.target.value)}/>
+              </div>
+              <input type="text" placeholder="Nickname" className="input full" value={username}
+                     onChange={(e) => setUsername(e.target.value)}/>
+              <input type="email" placeholder="Email" className="input full" value={email}
+                     onChange={(e) => setEmail(e.target.value)}/>
+              <input type="password" placeholder="Пароль" className="input full" value={password}
+                     onChange={(e) => setPassword(e.target.value)}/>
+              <button type="submit" className="submit-btn">Зареєструватися</button>
+            </form>
+            <div className="divider">
+              <hr/>
+              <span>Або увійдіть за допомогою</span>
+              <hr/>
+            </div>
+            <button className="google-btn">
+              <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="google-icon"
+              />
+              Продовжити за допомогою Google
+            </button>
+            <Link to="/" className="back-link">⬅ Повернутись назад на сайт <strong>Svinkino</strong></Link>
           </div>
-          <input type="text" placeholder="Nickname" className="input full" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input type="email" placeholder="Email" className="input full" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="Пароль" className="input full" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button type="submit" className="submit-btn">Зареєструватися</button>
-        </form>
-        <div className="divider">
-          <hr />
-          <span>Або увійдіть за допомогою</span>
-          <hr />
         </div>
-        <button className="google-btn">
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="google-icon"
-          />
-          Продовжити за допомогою Google
-        </button>
-        <Link  to="/" className="back-link">⬅ Повернутись назад на сайт <strong>Svinkino</strong></Link>
-      </div>
-    </div>
-  </>
+      </>
   );
 }
