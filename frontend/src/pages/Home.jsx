@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Carousel from '../Components/Carousel.jsx';
 import FilmGrid from '../Components/FilmGrid.jsx';
 import FilterButton from '../Components/FilmPage/FilterButton.jsx';
+import { AuthContext } from '../Components/Main/Auth/AuthProvider.jsx';
 
 export default function Home() {
+  const { user } = useContext(AuthContext);
+
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,9 +17,8 @@ export default function Home() {
       try {
         const response = await fetch('/api/v1/public/movies/');
         const data = await response.json();
-        console.log('Полученные данные:', data);
         setMovies(data.results);
-        setFilteredMovies(data.results); // по умолчанию показываем всё
+        setFilteredMovies(data.results); // фильтр по умолчанию
       } catch (error) {
         console.error("Ошибка при загрузке фильмов:", error);
       } finally {
@@ -40,14 +42,12 @@ export default function Home() {
     }
   };
 
-
-  if (loading) {
-    return <div>Загрузка...</div>;
-  }
+  if (loading) return <div>Загрузка...</div>;
 
   return (
     <>
       <Carousel movies={movies} />
+
       <div className="navigation">
         <nav className="navigation1">
           <FilterButton onChange={handleGenreFilter} />
@@ -57,24 +57,25 @@ export default function Home() {
         </nav>
       </div>
 
-      <Link to="/admin/add-movie">
-        <button
-          className="btn"
-          style={{
-            backgroundColor: '#1B1F3A',
-            color: '#ffffff',
-            width: '100px',
-            height: '50px',
-            fontSize: '20px',
-            marginLeft: '117px',
-            marginTop: '20px'
-          }}
-        >
-          Додати
-        </button>
-      </Link>
+      {user?.role === 'AD' && (
+        <Link to="/admin/add-movie">
+          <button
+            className="btn"
+            style={{
+              backgroundColor: '#1B1F3A',
+              color: '#ffffff',
+              width: '100px',
+              height: '50px',
+              fontSize: '20px',
+              marginLeft: '117px',
+              marginTop: '20px'
+            }}
+          >
+            Додати
+          </button>
+        </Link>
+      )}
 
-      {/* Показываем отфильтрованные фильмы */}
       <FilmGrid movies={filteredMovies} />
     </>
   );

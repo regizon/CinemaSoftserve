@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import Shedule from './FilmPage_Schedule';
+import SheduleEdit from './FilmPage_ScheduleEdit';
+import { Link, useNavigate } from 'react-router-dom';
 import FilmPage_ContentEdit from './FilmPage_ContentEdit';
 import FilmPage_Content from './FilmPage_Content';
-import { useNavigate } from 'react-router-dom';
 import { useMeta } from '../../pages/Admin/useMeta';
+import { AuthContext } from '../Main/Auth/AuthProvider.jsx';
 
 export default function FilmPage_Main({ movie }) {
   const token = localStorage.getItem('access');
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [isSessionEditing, setIsSessionEditing] = useState(false);
   const [isMovieEditing, setIsMovieEditing] = useState(false);
 
   const [movieData, setMovieData] = useState({
@@ -26,18 +31,42 @@ export default function FilmPage_Main({ movie }) {
   });
 
   const { actorOptions, directorOptions, genreOptions, loading } = useMeta();
-
   const [selectedDirectors, setSelectedDirectors] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedActors, setSelectedActors] = useState([]);
 
   const initializeSelectFields = () => {
     if (!loading && movie) {
-      setSelectedActors(actorOptions.filter(opt => movie.actors_read?.includes(opt.label)));
-      setSelectedDirectors(directorOptions.filter(opt => movie.directors_read?.includes(opt.label)));
-      setSelectedGenres(genreOptions.filter(opt => movie.genres_read?.includes(opt.label)));
+      setSelectedActors(Array.isArray(movie.actors_read) ? actorOptions.filter(opt => movie.actors_read.includes(opt.label)) : []);
+      setSelectedDirectors(Array.isArray(movie.directors_read) ? directorOptions.filter(opt => movie.directors_read.includes(opt.label)) : []);
+      setSelectedGenres(Array.isArray(movie.genres_read) ? genreOptions.filter(opt => movie.genres_read.includes(opt.label)) : []);
     }
   };
+
+  useEffect(() => {
+    if (movie) {
+      setMovieData({
+        title: movie.title || '',
+        slogan: movie.slogan || '',
+        year: movie.year || '',
+        age_rate: movie.age_rate || '',
+        country: movie.country || '',
+        original_title: movie.original_title || '',
+        language: movie.language || '',
+        duration_minutes: movie.duration_minutes || '',
+        description: movie.description || '',
+        img_url: movie.img_url || '',
+        poster_url: movie.poster_url || '',
+        trailer_url: movie.trailer_url || ''
+      });
+    }
+  }, [movie]);
+
+  useEffect(() => {
+    initializeSelectFields();
+  }, [loading, actorOptions, directorOptions, genreOptions, movie]);
+
+  const handleToggle = () => setIsSessionEditing(prev => !prev);
 
   const handleToggleMovie = () => {
     if (!isMovieEditing) {
@@ -89,7 +118,7 @@ export default function FilmPage_Main({ movie }) {
   };
 
   const handleMovieSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     try {
       const dataToSend = {
@@ -127,11 +156,13 @@ export default function FilmPage_Main({ movie }) {
     <div className="film-container">
       <div className="film-poster">
         <img src={movie.img_url} alt={movie.title} />
-        <button className="buy-button">Придбати квиток</button>
-        <button onClick={handleDelete} className="delete-button">Видалити</button>
+        <Link to="/reservation"><button className="buy-button">Придбати квиток</button></Link>
+        {user?.role === 'AD' && (
+          <button onClick={handleDelete} className="delete-button">Видалити</button>
+        )}
       </div>
 
-      <div className={`film-info ${isMovieEditing ? 'editing' : ''}`}>
+      <div className="film-info">
         {isMovieEditing ? (
           <FilmPage_ContentEdit
             {...movieData}
@@ -145,26 +176,51 @@ export default function FilmPage_Main({ movie }) {
             actorOptions={actorOptions}
             directorOptions={directorOptions}
             genreOptions={genreOptions}
+            alertMessage={null}
+            alertType={null}
             handleMovieSubmit={handleMovieSubmit}
           />
         ) : (
           <FilmPage_Content {...movie} />
         )}
-        <button
-          className="btn btn-secondary mt-2"
-          onClick={handleToggleMovie}
-          style={{
-            backgroundColor: '#ffffff',
-            color: '#1B1F3A',
-            width: '130px',
-            height: '50px',
-            fontSize: '20px',
-            marginLeft: '250px',
-            marginTop: '140px'
-          }}
-        >
-          {isMovieEditing ? 'Перегляд' : 'Редагувати'}
-        </button>
+        {user?.role === 'AD' && (
+          <button
+            className="btn btn-secondary mt-2"
+            onClick={handleToggleMovie}
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#1B1F3A',
+              width: '130px',
+              height: '50px',
+              fontSize: '20px',
+              marginLeft: '250px',
+              marginTop: '140px'
+            }}
+          >
+            {isMovieEditing ? 'Перегляд' : 'Редагувати'}
+          </button>
+        )}
+      </div>
+
+      <div className="film-poster">
+        {isSessionEditing ? <SheduleEdit /> : <Shedule />}
+        {user?.role === 'AD' && (
+          <button
+            className="btn btn-secondary mt-2"
+            onClick={handleToggle}
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#1B1F3A',
+              width: '130px',
+              height: '50px',
+              fontSize: '20px',
+              marginLeft: '250px',
+              marginTop: '140px'
+            }}
+          >
+            {isSessionEditing ? 'Перегляд' : 'Редагувати'}
+          </button>
+        )}
       </div>
     </div>
   );

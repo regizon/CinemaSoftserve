@@ -7,9 +7,18 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.permissions import AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+import requests
+
+from cinema.utils import email_confirmation_token
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
     CustomTokenObtainPairSerializer,
+    BaseMovieSerializer,
     BookingSerializer,
     ActorSerializer,
     GenreSerializer,
@@ -18,19 +27,8 @@ from cinema.public_api.serializers import (
     BookingCancelSerializer,
     ProfileSerializer,
     DirectorSerializer,
-    BaseMovieSerializer,
-    ManualMovieSerializer
+    ManualMovieSerializer,
 )
-
-from django_filters.rest_framework import DjangoFilterBackend
-import requests
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.sites.shortcuts import get_current_site
-from cinema.utils import email_confirmation_token
-from django.core.mail import send_mail
-
-
 
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = BaseMovieSerializer
@@ -50,13 +48,13 @@ class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
         Movie.objects.filter(is_active=True, active_until__lt=now).update(is_active=False)
         return Movie.objects.filter(is_active=True).prefetch_related('genres', 'actors', 'directors')
 
-
     @action(methods=['get'], detail=False)
     def genres(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
         return Response(serializer.data)
-    
+
+
 class PublicUserBooking(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -66,7 +64,6 @@ class PublicUserBooking(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
 
 
 class CancelBookingView(generics.UpdateAPIView):
@@ -95,12 +92,12 @@ class CancelBookingView(generics.UpdateAPIView):
         super().update(request, *args, **kwargs)
         return Response({"success": "Бронювання скасовано"})
 
+
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
-        email = serializer.save(is_active=False)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = email_confirmation_token.make_token(user)
         domain = get_current_site(self.request).domain
@@ -114,6 +111,7 @@ class RegisterView(generics.CreateAPIView):
             recipient_list=[user.email],
             fail_silently=False
         )
+
 
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
@@ -135,27 +133,26 @@ class ConfirmEmailView(APIView):
         else:
             return Response({"error": "Недійсний або прострочений токен"}, status=status.HTTP_400_BAD_REQUEST)
 
-class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
-    queryset = Session.objects.all()
-    serializer_class = SessionSerializer
 
+class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
+    serializer_class = SessionSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['movie', 'hall']
     ordering_fields = ['start_time']
     ordering = ['start_time']
 
     def get_queryset(self):
-        return super().get_queryset()
-        # from django.utils import timezone
-        # queryset = queryset.filter(start_time__gte=timezone.now())
-        # return queryset
+        return Session.objects.all()
+
+
 class CheckProfile(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
 
     def get_object(self):
         return self.request.user
-      
+
+
 class PublicActorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
@@ -174,6 +171,7 @@ class MovieSessions(generics.ListAPIView):
 
         return Session.objects.filter(movie_id=movie_id)
 
+
 class ActorInfoView(APIView):
     permission_classes = [AllowAny]
 
@@ -183,7 +181,6 @@ class ActorInfoView(APIView):
         except Actor.DoesNotExist:
             raise NotFound("Актор не знайдений у базі")
 
-        # Пошук по TMDb
         tmdb_search_url = "https://api.themoviedb.org/3/search/person"
         tmdb_response = requests.get(tmdb_search_url, params={
             "api_key": "8c71ea1bfc74c564ee45a3cbd6bec2ab",
@@ -201,7 +198,6 @@ class ActorInfoView(APIView):
         actor_data = results[0]
         tmdb_id = actor_data["id"]
 
-        # Детальна інфа про актора
         details_url = f"https://api.themoviedb.org/3/person/{tmdb_id}"
         details_response = requests.get(details_url, params={
             "api_key": "8c71ea1bfc74c564ee45a3cbd6bec2ab",
@@ -223,7 +219,8 @@ class ActorInfoView(APIView):
             "фото": f"https://image.tmdb.org/t/p/w500{details['profile_path']}" if details.get("profile_path") else None,
             "imdb_url": f"https://www.imdb.com/name/{details['imdb_id']}" if details.get("imdb_id") else None
         })
-    
+
+
 class AllEntitiesView(APIView):
     permission_classes = [AllowAny]
 
@@ -237,6 +234,7 @@ class AllEntitiesView(APIView):
             "genres": GenreSerializer(genres, many=True).data,
             "directors": DirectorSerializer(directors, many=True).data
         })
-    
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer

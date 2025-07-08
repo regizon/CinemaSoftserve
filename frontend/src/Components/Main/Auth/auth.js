@@ -3,6 +3,7 @@ export function isTokenValid(token) {
 
   try {
     const decoded = jwtDecode(token);
+    console.log(decoded.role)
     if (!decoded.exp) return false;
 
     const currentTime = Math.floor(Date.now() / 1000);
@@ -16,10 +17,20 @@ export function isTokenValid(token) {
 export function getUserRole(token) {
   try {
     const decoded = jwtDecode(token);
-    console.log(decoded)
-    return decoded.role || decoded.roles?.[0] || decoded.user?.role || null;
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    const isValid = decoded.exp && decoded.exp > currentTime;
+    const role = decoded.role;
+
+    return {
+      isValid,
+      role,
+    };
   } catch (error) {
-    console.error('Failed to decode token:', error);
-    return null;
+    console.error('Invalid token:', error);
+    return {
+      isValid: false,
+      role: null,
+    };
   }
 }

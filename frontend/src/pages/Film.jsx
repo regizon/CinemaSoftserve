@@ -29,7 +29,7 @@ export default function Film() {
       .catch(err => console.error(err));
   }, [id]);
 
-  if (notFound) return <NotFound />
+  if (notFound) return <NotFound />;
   if (!movie) return <div>Загрузка...</div>;
 
   return (
@@ -60,8 +60,11 @@ export default function Film() {
           </button>
         </div>
       </div>
-        <FilmPage_Trailer {...movie} />
-          <FilmPage_Posters />
+
+      <FilmPage_Trailer {...movie} />
+      <FilmPage_Posters />
     </div>
   );
 }
+
+
