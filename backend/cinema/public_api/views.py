@@ -98,19 +98,19 @@ class RegisterView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)  
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = email_confirmation_token.make_token(user)
-        domain = get_current_site(self.request).domain
+        # uid = urlsafe_base64_encode(force_bytes(user.pk))
+        # token = email_confirmation_token.make_token(user)
+        # domain = get_current_site(self.request).domain
 
-        confirm_url = f"http://{domain}/api/v1/confirm-email/{uid}/{token}/"
+        # confirm_url = f"http://{domain}/api/v1/confirm-email/{uid}/{token}/"
 
-        send_mail(
-            subject='Підтвердіть ваш email',
-            message=f'Перейдіть за посиланням для підтвердження: {confirm_url}',
-            from_email='noreply@cinema.com',
-            recipient_list=[user.email],
-            fail_silently=False
-        )
+        # send_mail(
+        #     subject='Підтвердіть ваш email',
+        #     message=f'Перейдіть за посиланням для підтвердження: {confirm_url}',
+        #     from_email='noreply@cinema.com',
+        #     recipient_list=[user.email],
+        #     fail_silently=False
+        # )
 
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]

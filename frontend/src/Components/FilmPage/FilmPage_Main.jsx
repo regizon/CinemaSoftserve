@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Shedule from './FilmPage_Schedule';
 import SheduleEdit from './FilmPage_ScheduleEdit';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FilmPage_ContentEdit from './FilmPage_ContentEdit';
 import FilmPage_Content from './FilmPage_Content';
 import { useMeta } from '../../pages/Admin/useMeta';
@@ -177,7 +177,7 @@ export default function FilmPage_Main({ movie }) {
     <div className="film-container">
       <div className="film-poster">
         <img src={movie.img_url} alt={movie.title} />
-        <button className="buy-button">Придбати квиток</button>
+        <Link to="/reservation"><button className="buy-button">Придбати квиток</button></Link>
         {user?.role == 'AD' && (
         <button onClick={handleDelete} className="delete-button">Видалити</button>
         )}

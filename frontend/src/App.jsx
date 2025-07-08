@@ -14,6 +14,7 @@ import { Routes, Route } from 'react-router-dom';
 import PrivateRoute from './Components/Main/Auth/PrivateRoute.jsx';
 
 import AddMovie from './pages/Admin/adminfilm.jsx';
+import Reservation from './pages/Reservation.jsx';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/film/:id" element={<Film />} />
         <Route path="/profile" element={ <PrivateRoute><Profile /></PrivateRoute>}/>
+        <Route path="/reservation" element={ <Reservation /> }/>
         <Route path="/admin/add-movie" element={<PrivateRoute><AddMovie /></PrivateRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
