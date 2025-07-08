@@ -145,6 +145,30 @@ class SessionSerializer(serializers.ModelSerializer):
         total = obj.hall.capacity
         booked = Booking.objects.filter(session=obj, status=StatusChoices.BOOKED).count()
         return total - booked
+    
+    def validate(self, data):
+        hall = data.get('hall')
+        start_time = data.get('start_time')
+        expire_time = data.get('expire_time')
+
+        if not hall or not start_time or not expire_time:
+            return data 
+
+        overlapping_sessions = Session.objects.filter(
+            hall=hall,
+            start_time__lt=expire_time,
+            expire_time__gt=start_time
+        )
+
+        if self.instance:
+            overlapping_sessions = overlapping_sessions.exclude(pk=self.instance.pk)
+
+        if overlapping_sessions.exists():
+            raise serializers.ValidationError(
+                "У цьому залі вже є сеанс, який перетинається за часом."
+            )
+
+        return data
 
 
 class HallSerializer(serializers.ModelSerializer):
