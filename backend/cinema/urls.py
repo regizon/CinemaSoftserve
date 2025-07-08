@@ -33,7 +33,7 @@ from cinema.public_api.views import (
 router = routers.SimpleRouter()
 router.register(r'public/movies', PublicMovieViewset, basename='public')
 router.register(r'admin/movies', AdminMovieViewset, basename='admin')
-router.register(r'public/sessions', PublicSessionViewset)
+router.register(r'public/sessions', PublicSessionViewset, basename='public-sessions')
 router.register(r'public/actors', PublicActorViewSet, basename='public-actors')
 router.register(r'admin/sessions', AdminSessionViewset, basename='admin_sessions')
 router.register(r'admin/bookings', AdminBookingViewset)

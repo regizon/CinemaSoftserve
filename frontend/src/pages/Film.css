@@ -49,6 +49,7 @@ body {
     margin-top: 214px;
     flex: 2;
     font-size: 24px;
+    width: 100%;
 }
 
 .film-info.editing {
@@ -371,10 +372,10 @@ body {
 
 .left-column {
   flex: 2;
-  max-width: 50%;
+  max-width: 60%;
 }
 
 .right-column {
   flex: 1;
-  max-width: 28%;
+  max-width: 25%;
 }

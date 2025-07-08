@@ -10,6 +10,7 @@ import { AuthContext } from '../Main/Auth/AuthProvider.jsx';
 export default function FilmPage_Main({ movie }) {
   const token = localStorage.getItem('access');
   const { user } = useContext(AuthContext);
+  console.log('🧠 user в FilmPage_Main:', user);
   const navigate = useNavigate();
 
   const [isSessionEditing, setIsSessionEditing] = useState(false);
@@ -153,75 +154,79 @@ export default function FilmPage_Main({ movie }) {
   };
 
   return (
-    <div className="film-container">
-      <div className="film-poster">
-        <img src={movie.img_url} alt={movie.title} />
-        <Link to="/reservation"><button className="buy-button">Придбати квиток</button></Link>
-        {user?.role === 'AD' && (
-          <button onClick={handleDelete} className="delete-button">Видалити</button>
-        )}
-      </div>
+      <div className="film-container">
+        <div className="film-poster">
+          <img src={movie.img_url} alt={movie.title}/>
+          <Link to="/reservation">
+            <button className="buy-button">Придбати квиток</button>
+          </Link>
+          {user?.role === 'AD' && (
+              <button onClick={handleDelete} className="delete-button">Видалити</button>
+          )}
+        </div>
 
-      <div className="film-info">
-        {isMovieEditing ? (
-          <FilmPage_ContentEdit
-            {...movieData}
-            onFieldChange={handleFieldChange}
-            selectedActors={selectedActors}
-            setSelectedActors={setSelectedActors}
-            selectedDirectors={selectedDirectors}
-            setSelectedDirectors={setSelectedDirectors}
-            selectedGenres={selectedGenres}
-            setSelectedGenres={setSelectedGenres}
-            actorOptions={actorOptions}
-            directorOptions={directorOptions}
-            genreOptions={genreOptions}
-            alertMessage={null}
-            alertType={null}
-            handleMovieSubmit={handleMovieSubmit}
-          />
-        ) : (
-          <FilmPage_Content {...movie} />
-        )}
-        {user?.role === 'AD' && (
-          <button
-            className="btn btn-secondary mt-2"
-            onClick={handleToggleMovie}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#1B1F3A',
-              width: '130px',
-              height: '50px',
-              fontSize: '20px',
-              marginLeft: '250px',
-              marginTop: '140px'
-            }}
-          >
-            {isMovieEditing ? 'Перегляд' : 'Редагувати'}
-          </button>
-        )}
-      </div>
+        <div className="film-info">
+          {isMovieEditing ? (
+              <FilmPage_ContentEdit
+                  {...movieData}
+                  onFieldChange={handleFieldChange}
+                  selectedActors={selectedActors}
+                  setSelectedActors={setSelectedActors}
+                  selectedDirectors={selectedDirectors}
+                  setSelectedDirectors={setSelectedDirectors}
+                  selectedGenres={selectedGenres}
+                  setSelectedGenres={setSelectedGenres}
+                  actorOptions={actorOptions}
+                  directorOptions={directorOptions}
+                  genreOptions={genreOptions}
+                  alertMessage={null}
+                  alertType={null}
+                  handleMovieSubmit={handleMovieSubmit}
+              />
+          ) : (
+              <FilmPage_Content {...movie} />
+          )}
+          {user?.role === 'AD' && (
+              <button
+                  className="btn btn-secondary mt-2"
+                  onClick={handleToggleMovie}
+                  style={{
+                    backgroundColor: '#ffffff',
+                    color: '#1B1F3A',
+                    width: '130px',
+                    height: '50px',
+                    fontSize: '20px',
+                    marginLeft: '250px',
+                    marginTop: '140px'
+                  }}
+              >
+                {isMovieEditing ? 'Перегляд' : 'Редагувати'}
+              </button>
+          )}
+        </div>
 
-      <div className="film-poster">
-        {isSessionEditing ? <SheduleEdit /> : <Shedule />}
-        {user?.role === 'AD' && (
-          <button
-            className="btn btn-secondary mt-2"
-            onClick={handleToggle}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#1B1F3A',
-              width: '130px',
-              height: '50px',
-              fontSize: '20px',
-              marginLeft: '250px',
-              marginTop: '140px'
-            }}
-          >
-            {isSessionEditing ? 'Перегляд' : 'Редагувати'}
-          </button>
-        )}
+        <div className="film-poster">
+          {isSessionEditing ? <SheduleEdit/> : <Shedule/>}
+
+          {user?.role === 'AD' ? (
+              <button
+                  className="btn btn-secondary mt-2"
+                  onClick={handleToggle}
+                  style={{
+                    backgroundColor: '#ffffff',
+                    color: '#1B1F3A',
+                    width: '130px',
+                    height: '50px',
+                    fontSize: '20px',
+                    marginLeft: '250px',
+                    marginTop: '140px'
+                  }}
+              >
+                {isSessionEditing ? 'Перегляд' : 'Редагувати'}
+              </button>
+          ) : null}
+        </div>
+
       </div>
-    </div>
   );
 }

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import FilmPage_Main from '../Components/FilmPage/FilmPage_Main.jsx';
 import FilmPage_Posters from '../Components/FilmPage/FilmPage_Posters.jsx';
 import FilmPage_Trailer from '../Components/FilmPage/FilmPage_Trailer.jsx';
 import FilmPage_Schedule from '../Components/FilmPage/FilmPage_Schedule.jsx';
 import FilmPage_ScheduleEdit from '../Components/FilmPage/FilmPage_ScheduleEdit.jsx';
+import { AuthContext } from '../Components/Main/Auth/AuthProvider.jsx';
 import './Film.css';
 import NotFound from './NotFound.jsx';
 
@@ -13,6 +14,8 @@ export default function Film() {
   const [movie, setMovie] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [isSessionEditing, setIsSessionEditing] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   const handleToggleEdit = () => setIsSessionEditing(prev => !prev);
 
@@ -38,26 +41,33 @@ export default function Film() {
         <div className="left-column">
           <FilmPage_Main movie={movie} />
         </div>
-        <div className="right-column">
-          {isSessionEditing
-            ? <FilmPage_ScheduleEdit movieId={movie.id} />
-            : <FilmPage_Schedule movieId={movie.id} />
-          }
 
-          <button
-            onClick={handleToggleEdit}
-            className="btn btn-secondary mt-2"
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#1B1F3A',
-              width: '130px',
-              height: '50px',
-              fontSize: '20px',
-              marginTop: '20px'
-            }}
-          >
-            {isSessionEditing ? 'Перегляд' : 'Редагувати'}
-          </button>
+        <div className="right-column">
+          {user?.role === 'AD' ? (
+            <>
+              {isSessionEditing
+                ? <FilmPage_ScheduleEdit movieId={movie.id} />
+                : <FilmPage_Schedule movieId={movie.id} />
+              }
+
+              <button
+                onClick={handleToggleEdit}
+                className="btn btn-secondary mt-2"
+                style={{
+                  backgroundColor: '#ffffff',
+                  color: '#1B1F3A',
+                  width: '130px',
+                  height: '50px',
+                  fontSize: '20px',
+                  marginTop: '20px'
+                }}
+              >
+                {isSessionEditing ? 'Перегляд' : 'Редагувати'}
+              </button>
+            </>
+          ) : (
+            <FilmPage_Schedule movieId={movie.id} />
+          )}
         </div>
       </div>
 
@@ -66,5 +76,3 @@ export default function Film() {
     </div>
   );
 }
-
-
