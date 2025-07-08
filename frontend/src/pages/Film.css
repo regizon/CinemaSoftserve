@@ -47,7 +47,6 @@ body {
   }
 .film-info {
     margin-top: 214px;
-    flex: 2;
     font-size: 24px;
     width: 100%;
 }
@@ -59,7 +58,7 @@ body {
 }
 
 .center-panel {
-  width: 100% !important;
+  width: 600px !important;
   max-width: 100% !important;
   flex: 1 1 100% !important;
   box-sizing: border-box;
@@ -236,7 +235,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-
+  
 }
 .film-caption1 {
     margin-top: 7px;

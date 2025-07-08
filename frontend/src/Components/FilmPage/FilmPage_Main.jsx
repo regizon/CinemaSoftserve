@@ -153,11 +153,14 @@ export default function FilmPage_Main({ movie }) {
     }
   };
 
+  const isAdmin = user?.role?.toUpperCase?.() === 'AD';
+
+
   return (
       <div className="film-container">
         <div className="film-poster">
           <img src={movie.img_url} alt={movie.title}/>
-          <Link to="/reservation">
+          <Link to={`/reservation/${movie.id}`}>
             <button className="buy-button">Придбати квиток</button>
           </Link>
           {user?.role === 'AD' && (

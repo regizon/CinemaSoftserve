@@ -1,324 +1,399 @@
-import React from "react";
-import './Reservation.css'
+import React, { useState, useEffect } from "react";
+
+import { useParams } from "react-router-dom";
+
+import "./Reservation.css";
+
+
+/** Компонент, который рисует и управляет местами для одного сеанса. */
+
+function Seating({ session, token }) {
+
+  const [takenSeats, setTakenSeats] = useState({});
+
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
+
+  const seatCounts = [14,16,16,18,20,22,22,24,24,26];
+
+  const VIP_COUNT = 4;
+
+
+  // сразу после mount — грузим забронированные места
+
+  useEffect(() => {
+
+    fetch(`/api/v1/bookings/?session=${session.id}`, {
+
+      headers: { Authorization: `Bearer ${token}` }
+
+    })
+
+      .then(r => r.json())
+
+      .then(data => {
+
+        const arr = Array.isArray(data)
+
+          ? data
+
+          : Array.isArray(data.results)
+
+            ? data.results
+
+            : [];
+
+        const map = {};
+
+        arr.forEach(b => map[`${b.row}-${b.seat_number}`] = true);
+
+        setTakenSeats(map);
+
+      })
+
+      .catch(console.error);
+
+  }, [session.id, token]);
+
+
+  const toggleSeat = (row, number) => {
+
+    const key = `${row}-${number}`;
+
+    if (takenSeats[key]) return;
+
+    setSelectedSeats(prev =>
+
+      prev.some(s => s.row===row && s.number===number)
+
+        ? prev.filter(s => !(s.row===row && s.number===number))
+
+        : [...prev, {row,number}]
+
+    );
+
+  };
+
+
+  const handleBook = () => {
+
+    Promise.all(
+
+      selectedSeats.map(({row,number}) =>
+
+        fetch(`/api/v1/bookings/`, {
+
+          method:"POST",
+
+          headers:{
+
+            "Content-Type":"application/json",
+
+            Authorization:`Bearer ${token}`
+
+          },
+
+          body: JSON.stringify({
+
+            session: session.id,
+
+            row,
+
+            seat_number: String(number)
+
+          })
+
+        })
+
+      )
+
+    )
+
+    .then(() => {
+
+      alert("Успішно заброньовано!");
+
+      // отметим как занятые
+
+      setTakenSeats(prev => {
+
+        const m = {...prev};
+
+        selectedSeats.forEach(s => m[`${s.row}-${s.number}`] = true);
+
+        return m;
+
+      });
+
+      setSelectedSeats([]);
+
+    })
+
+    .catch(()=>alert("Помилка бронювання"));
+
+  };
+
+
+  // карта статусов
+
+  const seatStatusMap = {};
+
+  selectedSeats.forEach(s => { seatStatusMap[`${s.row}-${s.number}`] = "selected"; });
+
+  Object.keys(takenSeats).forEach(k => { seatStatusMap[k] = "taken"; });
+
+
+  // узкое компоненты: Seat и SeatRow
+
+  const Seat = ({row,number,status}) => (
+
+    <div className={`seat ${status}`} onClick={()=>toggleSeat(row,number)}>
+
+      {number}
+
+    </div>
+
+  );
+
+
+  const SeatRow = ({rowIndex,count}) => (
+
+    <div className="seat-row">
+
+      <div className="row-label">{rowIndex}</div>
+
+      {Array.from({length: count},(_,i)=>{
+
+        const num = i+1, key=`${rowIndex}-${num}`;
+
+        const status = seatStatusMap[key]||"free";
+
+        return <Seat key={key} row={rowIndex} number={num} status={status}/>
+
+      })}
+
+    </div>
+
+  );
+
+
+  // price utils
+
+  const getPrice = row => row===0 ? parseFloat(session.vip_price) : parseFloat(session.price);
+
+  const total = selectedSeats.reduce((sum,s)=>sum+getPrice(s.row),0);
+
+
+  return (
+
+    <>
+
+      <div className="movie-info">
+
+        <h2>{new Date(session.start_time).toLocaleString("uk-UA",{
+
+          weekday:'long',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'
+
+        })}</h2>
+
+        <p>Зал: {session.hall_name}</p>
+
+        <p>Ціна: {session.price} грн / VIP: {session.vip_price} грн</p>
+
+      </div>
+
+
+      <div className="cinema-wrapper">
+
+        <div className="screen"/>
+
+        <div className="seating">
+
+          {seatCounts.map((c,i)=>
+
+            <SeatRow key={i} rowIndex={i+1} count={c}/>
+
+          )}
+
+          <div className="vip-row">
+
+            {Array.from({length:VIP_COUNT},(_,i)=>{
+
+              const row=0, num=i+1, key=`${row}-${num}`;
+
+              const status=seatStatusMap[key]||"free";
+
+              return <Seat key={key} row={row} number={num} status={status}/>
+
+            })}
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div className="side-panel">
+
+        <h3>Вибрано ({selectedSeats.length})</h3>
+
+        <div className="tickets-list1">
+
+          {selectedSeats.map((s,i)=>(
+
+            <div className="ticket-item" key={i}>
+
+              <button className="close-btn" onClick={()=>toggleSeat(s.row,s.number)}>×</button>
+
+              <p>Ряд {s.row}, місце {s.number} — {getPrice(s.row).toFixed(2)} грн</p>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        <div className="payment-summary">
+
+          <div className="total-info">
+
+            <span>Всього:</span><span className="total-price">{total.toFixed(2)} грн</span>
+
+          </div>
+
+          <button className="continue-btn" disabled={!selectedSeats.length} onClick={handleBook}>
+
+            Забронювати
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </>
+
+  );
+
+}
+
 
 export default function Reservation() {
-    return(
-        <div>
-        <div className="cinema-page">
-            <div className="movie-info">
-            <img src="./img/movies/elio.png" alt="Еліо" />
-            <div className="info-text">
-                <h2>Еліо</h2>
-                <div className="session-info">
-                <span>Середа 02.07</span>
-                <span>Синій зал</span>
-                <span>10:50 - 13:00</span>
-                </div>
-            </div>
-            </div>
-            <div className="cinema-wrapper">
-            <div className="screen" />
-            <div className="seating">
-                <div className="seat-row">
-                {/* 14 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 16 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 16 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 18 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 20 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 22 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-        <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 22 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 24 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 24 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-                <div className="seat-row">
-                {/* 26 seats */}
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-        <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                <div className="seat" />
-                </div>
-            </div>
-            {/* VIP */}
-            <div className="vip-row">
-                <div className="vip-seat" />
-                <div className="vip-seat" />
-                <div className="vip-seat" />
-                <div className="vip-seat" />
-            </div>
-            </div>
-            <div className="side-panel">
-            <div className="tickets-list1">
-                <div className="ticket-item">
-                <button className="close-btn">×</button>
-                <div className="ticket-header">
-                    <h4>Ряд 1, місце 1</h4>
-                    <p>Фільм: Еліо</p>
-                </div>
-                <div className="promo-row">
-                    <input
-                    type="text"
-                    placeholder="Введіть промокод"
-                    className="promo-input"
-                    />
-                    <button className="coupon-btn" title="Вибрати купон">
-                    <svg
-                        width={32}
-                        height={32}
-                        viewBox="0 0 32 32"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <rect width={32} height={32} rx={5} fill="#1B1F3A" />
-                        <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.0281 6.27592C12.6934 6.61058 12.6996 7.15936 13.0419 7.50165C13.3842 7.84394 13.933 7.85012 14.2676 7.51545L28.0796 21.3274L27.7334 21.6737C27.5867 21.527 27.3515 21.5243 27.208 21.6678C27.0646 21.8112 27.0673 22.0464 27.214 22.1931L26.9543 22.4528C26.8076 22.3061 26.5724 22.3034 26.4289 22.4469C26.2855 22.5903 26.2882 22.8255 26.4349 22.9722L26.1752 23.2319C26.0285 23.0852 25.7933 23.0825 25.6498 23.226C25.5064 23.3694 25.5091 23.6046 25.6558 23.7513L25.396 24.011C25.2494 23.8643 25.0142 23.8616 24.8707 24.0051C24.7273 24.1485 24.73 24.3837 24.8766 24.5304L24.6169 24.7901C24.4703 24.6434 24.2351 24.6407 24.0916 24.7842C23.9482 24.9276 23.9509 25.1628 24.0975 25.3095L23.8378 25.5692C23.6912 25.4225 23.456 25.4199 23.3125 25.5633C23.1691 25.7067 23.1718 25.9419 23.3184 26.0886L23.0587 26.3483C22.9121 26.2016 22.6769 26.199 22.5334 26.3424C22.39 26.4858 22.3927 26.721 22.5393 26.8677L22.2796 27.1274C22.133 26.9807 21.8978 26.9781 21.7543 27.1215C21.6109 27.2649 21.6136 27.5001 21.7602 27.6468L21.3274 28.0796L7.51544 14.2677C7.85011 13.933 7.84393 13.3842 7.50164 13.0419C7.15935 12.6996 6.61057 12.6935 6.27591 13.0281L2.99999 9.75221L3.43282 9.31937C3.57952 9.46607 3.81471 9.46872 3.95814 9.32529C4.10157 9.18186 4.09892 8.94667 3.95222 8.79997L4.21192 8.54027C4.35862 8.68697 4.59381 8.68962 4.73724 8.54619C4.88067 8.40276 4.87802 8.16757 4.73132 8.02087L4.99102 7.76117C5.13772 7.90787 5.37291 7.91052 5.51634 7.76709C5.65977 7.62366 5.65712 7.38847 5.51043 7.24177L5.77013 6.98207C5.91682 7.12877 6.15201 7.13141 6.29544 6.98799C6.43887 6.84456 6.43622 6.60937 6.28953 6.46267L6.54923 6.20297C6.69592 6.34967 6.93111 6.35231 7.07454 6.20888C7.21797 6.06546 7.21532 5.83026 7.06863 5.68357L7.32833 5.42387C7.47502 5.57056 7.71021 5.57321 7.85364 5.42978C7.99707 5.28636 7.99442 5.05116 7.84773 4.90447L8.10743 4.64477C8.25412 4.79146 8.48932 4.79411 8.63274 4.65068C8.77617 4.50725 8.77352 4.27206 8.62683 4.12537L8.88653 3.86567C9.03322 4.01236 9.26842 4.01501 9.41184 3.87158C9.55527 3.72815 9.55263 3.49296 9.40593 3.34627L9.7522 3L13.0281 6.27592ZM7.6728 12.6937L7.84988 12.8708L8.54241 12.1782L8.36534 12.0012L7.6728 12.6937ZM8.53847 11.828L8.71555 12.0051L9.40808 11.3126L9.231 11.1355L8.53847 11.828ZM9.40414 10.9624L9.58121 11.1394L10.2737 10.4469L10.0967 10.2698L9.40414 10.9624ZM10.2698 10.0967L10.4469 10.2738L11.1394 9.58123L10.9623 9.40415L10.2698 10.0967ZM11.1355 9.23102L11.3126 9.40809L12.0051 8.71556L11.828 8.53848L11.1355 9.23102ZM12.6937 7.67281L12.0011 8.36535L12.1782 8.54242L12.8708 7.84989L12.6937 7.67281Z"
-                        fill="white"
-                        />
-                        <path
 
-        d="M11.5893 14.0204C11.5728 13.9512 11.5761 13.9017 11.5992 13.872C11.619 13.8456 11.6734 13.8076 11.7625 13.7581C11.8021 13.7119 11.8434 13.674 11.8863 13.6443C11.9325 13.6179 11.9638 13.5997 11.9803 13.5898C11.9968 13.6063 12.0166 13.6063 12.0397 13.5898C12.0628 13.5733 12.081 13.5585 12.0942 13.5453C12.1206 13.5189 12.175 13.4842 12.2575 13.4413C12.3433 13.4017 12.4274 13.3572 12.5099 13.3077C12.6023 13.2681 12.6881 13.2318 12.7673 13.1988C12.8531 13.1658 12.9026 13.1427 12.9158 13.1295C12.9422 13.1031 12.9752 13.0833 13.0148 13.0701C13.0577 13.0536 13.1006 13.0404 13.1435 13.0305C13.1996 13.0074 13.254 12.9761 13.3068 12.9365C13.3662 12.8969 13.4091 12.8639 13.4355 12.8375C13.4982 12.8144 13.5659 12.7896 13.6385 12.7632C13.7111 12.7368 13.7804 12.7038 13.8464 12.6642C13.9223 12.6279 14.0312 12.5751 14.173 12.5058C14.3215 12.4365 14.4733 12.3672 14.6284 12.2979C14.7208 12.2649 14.8165 12.2286 14.9155 12.189C15.0145 12.1494 15.1003 12.1164 15.1729 12.09C15.2455 12.0636 15.2867 12.0554 15.2966 12.0653C15.2966 12.0653 15.3016 12.0603 15.3115 12.0504C15.3247 12.0372 15.3379 12.024 15.3511 12.0109C15.3676 11.9944 15.4121 11.9762 15.4847 11.9564C15.5606 11.9333 15.6365 11.9069 15.7124 11.8772C15.7949 11.8607 15.8642 11.8376 15.9203 11.8079C15.9797 11.7749 16.0094 11.7584 16.0094 11.7584C16.0094 11.7584 16.0243 11.7535 16.054 11.7436C16.087 11.737 16.1167 11.7337 16.143 11.7337C16.2156 11.7469 16.2668 11.7749 16.2965 11.8178C16.3295 11.864 16.3311 11.9284 16.3014 12.0108C16.275 12.09 16.242 12.1461 16.2024 12.1791C16.1661 12.2088 16.115 12.2303 16.049 12.2435C15.9632 12.2765 15.8527 12.3177 15.7174 12.3672C15.5854 12.4134 15.4418 12.4646 15.2867 12.5207C15.1382 12.5768 14.9947 12.6312 14.8561 12.684C14.7241 12.7368 14.6103 12.7847 14.5146 12.8276C14.4255 12.8705 14.3727 12.9002 14.3562 12.9167L13.6533 13.2136C13.6467 13.2202 13.6236 13.2301 13.584 13.2433C13.5477 13.2598 13.4933 13.2846 13.4207 13.3176C13.3514 13.3539 13.2606 13.4017 13.1485 13.4611C13.0363 13.5205 12.901 13.5931 12.7426 13.6789C12.4654 13.8241 12.2492 13.938 12.0942 14.0204C11.9424 14.0996 11.8335 14.1491 11.7675 14.1689C11.7015 14.1953 11.6569 14.197 11.6338 14.1739C11.6206 14.1607 11.6124 14.1392 11.6091 14.1095C11.6058 14.0864 11.5992 14.0567 11.5893 14.0204ZM13.2969 15.8073C13.2639 15.7809 13.2375 15.7248 13.2177 15.639C13.1979 15.5598 13.1814 15.4674 13.1683 15.3618C13.1584 15.2595 13.1518 15.1572 13.1485 15.0549C13.1485 14.956 13.1518 14.8735 13.1584 14.8075C13.1814 14.6788 13.2144 14.5138 13.2573 14.3125C13.3035 14.1079 13.3778 13.9149 13.4801 13.7334C13.5626 13.6047 13.622 13.4991 13.6583 13.4166C13.6979 13.3308 13.7342 13.2648 13.7672 13.2186L14.1186 12.8771L14.2918 13.2087C14.1302 13.4034 14.0064 13.5766 13.9206 13.7284C13.8414 13.8802 13.782 14.0254 13.7424 14.164C13.6962 14.2894 13.655 14.4197 13.6187 14.555C13.5857 14.687 13.5692 14.8091 13.5692 14.9213C13.5626 15.0797 13.5692 15.2084 13.589 15.3074C13.6088 15.4064 13.6335 15.4707 13.6632 15.5004C13.6764 15.5202 13.688 15.5549 13.6979 15.6044C13.7111 15.6572 13.7193 15.7083 13.7226 15.7578C13.7325 15.8073 13.7292 15.8436 13.7127 15.8667C13.7061 15.8799 13.6929 15.8964 13.6731 15.9162C13.65 15.9393 13.6269 15.9558 13.6038 15.9657C13.5807 15.9822 13.5609 15.9921 13.5444 15.9954C13.5114 16.0086 13.4735 16.0102 13.4306 16.0003C13.3877 15.997 13.3431 15.9327 13.2969 15.8073ZM14.0246 12.8622L14.6482 12.9612C14.668 12.9612 14.7357 12.9629 14.8512 12.9662C14.97 12.9728 15.1531 12.9942 15.4006 13.0305L16.5044 13.1443C16.6298 13.1839 16.7684 13.2136 16.9202 13.2334C17.0753 13.2565 17.1907 13.2763 17.2666 13.2928C17.3623 13.3093 17.4465 13.3242 17.5191 13.3374C17.5917 13.3506 17.6329 13.3654 17.6428 13.3819C17.6824 13.3951 17.7039 13.4265 17.7072 13.476C17.7171 13.5255 17.7121 13.5766 17.6923 13.6294C17.6791 13.6822 17.6577 13.7202 17.628 13.7433C17.6016 13.7829 17.5669 13.8043 17.524 13.8076C17.4811 13.8109 17.4003 13.7961 17.2815 13.7631C17.1891 13.7301 17.1033 13.7037 17.0241 13.6839C16.9482 13.6674 16.8954 13.6641 16.8657 13.674C16.8657 13.674 16.8096 13.6674 16.6974 13.6542C16.5918 13.641 16.4582
+  const { movieId } = useParams();
 
-        13.6195 16.2965 13.5898C16.0787 13.5436 15.884 13.5106 15.7124 13.4908C15.5441 13.4743 15.427 13.4727 15.361 13.4859C15.3478 13.4727 15.3296 13.4644 15.3065 13.4611C15.2867 13.4611 15.2719 13.4529 15.262 13.4364C15.262 13.4364 15.2405 13.4314 15.1976 13.4215C15.158 13.4149 15.1234 13.4133 15.0937 13.4166C15.0706 13.4265 15.0327 13.4347 14.9799 13.4413C14.9304 13.4512 14.8908 13.438 14.8611 13.4017C14.8248 13.3918 14.7555 13.3786 14.6532 13.3621C14.5542 13.3423 14.4469 13.3242 14.3314 13.3077C14.2192 13.2945 14.1203 13.2846 14.0345 13.278C13.9487 13.2714 13.9008 13.2697 13.8909 13.273L14.0246 12.8622Z"
-                        fill="#1B1F3A"
-                        />
-                        <path
-                        d="M13.0186 17.0535C12.9163 16.9974 12.8256 16.9133 12.7464 16.8011C12.6672 16.6955 12.6144 16.5866 12.588 16.4744C12.5583 16.3589 12.5649 16.2698 12.6078 16.2071C12.6243 16.184 12.6524 16.1692 12.692 16.1626C12.7283 16.1527 12.7629 16.1543 12.7959 16.1675C12.8223 16.1807 12.8338 16.2055 12.8305 16.2418C12.8404 16.2847 12.8685 16.3523 12.9147 16.4447C12.9576 16.5404 13.0302 16.6229 13.1325 16.6922C13.2249 16.7516 13.3437 16.7813 13.4889 16.7813C13.6374 16.7846 13.766 16.778 13.8749 16.7615C13.9409 16.7483 14.0564 16.7219 14.2214 16.6823C14.3864 16.6427 14.563 16.5948 14.751 16.5387C14.9457 16.4827 15.119 16.4249 15.2708 16.3655C15.3071 16.349 15.35 16.3292 15.3995 16.3061C15.449 16.283 15.4952 16.2698 15.5381 16.2665C15.5975 16.2467 15.6503 16.2269 15.6964 16.2071C15.7492 16.1873 15.7839 16.1725 15.8004 16.1626C15.8202 16.1494 15.868 16.1312 15.9439 16.1081C16.0198 16.085 16.0941 16.0603 16.1667 16.0339C16.2327 16.0009 16.33 15.953 16.4587 15.8903C16.5874 15.8276 16.6979 15.7831 16.7903 15.7567C16.9058 15.7204 16.9982 15.6907 17.0675 15.6676C17.1434 15.6445 17.2012 15.6428 17.2408 15.6626C17.2936 15.6692 17.3249 15.6775 17.3348 15.6874C17.348 15.7006 17.3629 15.7352 17.3794 15.7913C17.3794 15.8705 17.3645 15.9349 17.3348 15.9844C17.3084 16.0306 17.2573 16.0718 17.1814 16.1081C17.1121 16.1444 17.0065 16.184 16.8646 16.2269C16.759 16.2797 16.6567 16.3226 16.5577 16.3556C16.4653 16.3886 16.401 16.4068 16.3647 16.4101C16.3086 16.4332 16.2442 16.4579 16.1716 16.4843C16.1056 16.5107 16.0446 16.5354 15.9885 16.5585C15.7971 16.6311 15.6387 16.6872 15.5133 16.7268C15.3879 16.7664 15.2741 16.8044 15.1718 16.8407C15.0695 16.877 14.954 16.9232 14.8253 16.9793C14.6273 17.0255 14.4376 17.0667 14.2561 17.103C14.0746 17.1459 13.8964 17.1756 13.7215 17.1921C13.6588 17.1888 13.5829 17.1822 13.4938 17.1723C13.4047 17.1624 13.3173 17.1476 13.2315 17.1278C13.149 17.1113 13.078 17.0865 13.0186 17.0535ZM14.8748 16.5338C14.8319 16.4777 14.8121 16.3985 14.8154 16.2962C14.822 16.1972 14.8418 16.1048 14.8748 16.019C14.9078 15.9332 14.9408 15.8804 14.9738 15.8606C14.9903 15.8441 15.0035 15.8309 15.0134 15.821C15.0233 15.8111 15.0282 15.8062 15.0282 15.8062C15.0084 15.7864 15.015 15.7435 15.048 15.6775C15.0843 15.6148 15.1388 15.5405 15.2114 15.4548C15.284 15.369 15.3632 15.2799 15.449 15.1875C15.5381 15.0984 15.6255 15.0175 15.7113 14.9449C15.7806 14.902 15.8482 14.8476 15.9142 14.7816C15.9835 14.7123 16.0396 14.6595 16.0825 14.6232C16.132 14.5671 16.1716 14.5374 16.2013 14.5341C16.2343 14.5275 16.2624 14.5259 16.2855 14.5291C16.4175 14.5819 16.4538 14.6677 16.3944 14.7865C16.3416 14.9053 16.1881 15.0753 15.934 15.2964C15.7954 15.4218 15.6635 15.5537 15.5381 15.6923C15.4127 15.8309 15.3153 15.9646 15.246 16.0933C15.18 16.2253 15.1569 16.3375 15.1767 16.4299C15.1866 16.4662 15.18 16.4958 15.1569 16.5189C15.1338 16.542 15.1025 16.5602 15.0629 16.5734C15.0266 16.5833 14.9886 16.5849 14.949 16.5783C14.916 16.5717 14.8913 16.5569 14.8748 16.5338Z"
-                        fill="#1B1F3A"
-                        />
-                        <path
-        d="M16.0036 17.8507C15.9706 17.8045 15.9574 17.755 15.964 17.7022C15.9772 17.6494 15.9789 17.5917 15.969 17.529C16.0053 17.4927 16.0713 17.4432 16.1669 17.3805C16.2692 17.3178 16.3732 17.26 16.4788 17.2072C16.5877 17.1511 16.6685 17.1132 16.7213 17.0934C16.8203 17.0208 16.9243 16.9597 17.0332 16.9102C17.1453 16.8641 17.2493 16.8129 17.345 16.7568C17.4275 16.7073 17.505 16.6595 17.5776 16.6133C17.6535 16.5704 17.7278 16.5291 17.8004 16.4895C17.8598 16.4631 17.8977 16.4417 17.9142 16.4252C17.934 16.4054 17.9522 16.3938 17.9687 16.3905C17.9918 16.3872 18.033 16.3955 18.0924 16.4153C18.1155 16.4648 18.1402 16.506 18.1666 16.539C18.1996 16.572 18.2376 16.5935 18.2805 16.6034C18.2871 16.6034 18.3118 16.6281 18.3547 16.6776C18.4042 16.7271 18.4587 16.7816 18.5181 16.841C18.5775 16.9003 18.6237 16.9432 18.6567 16.9696C18.7062 17.0125 18.7458 17.062 18.7755 17.1181C18.8052 17.1742 18.8448 17.227 18.8943 17.2765C18.9339 17.3623 18.9652 17.4465 18.9883 17.529C19.0114 17.6115 19.0164 17.689 19.0032 17.7616C18.9966 17.8342 18.9603 17.9002 18.8943 17.9596C18.8382 18.0025 18.7837 18.0503 18.7309 18.1031C18.6781 18.1559 18.6154 18.1922 18.5428 18.212C18.5065 18.2417 18.4356 18.2797 18.33 18.3259C18.2277 18.3688 18.1204 18.4166 18.0083 18.4694C17.9027 18.5222 17.8202 18.5717 17.7608 18.6179C17.7344 18.6377 17.7014 18.6509 17.6618 18.6575C17.6288 18.6641 17.6007 18.6823 17.5776 18.712C17.5479 18.7483 17.5017 18.7846 17.439 18.8209C17.3829 18.8571 17.3301 18.8769 17.2806 18.8802C17.2179 18.8835 17.1684 18.8605 17.1321 18.811C17.0991 18.7582 17.081 18.7004 17.0777 18.6377C17.081 18.575 17.1041 18.5255 17.147 18.4892C17.1866 18.4496 17.2361 18.4034 17.2955 18.3506C17.3615 18.2978 17.4176 18.2516 17.4638 18.212C17.51 18.212 17.543 18.2021 17.5628 18.1823C17.5892 18.1625 17.6156 18.1427 17.642 18.1229C17.741 18.0833 17.8581 18.0256 17.9934 17.9497C18.1353 17.8738 18.2656 17.7963 18.3844 17.7171C18.5032 17.6379 18.5775 17.5702 18.6072 17.5141C18.5544 17.4613 18.4818 17.3953 18.3894 17.3161C18.3003 17.2336 18.2161 17.1594 18.1369 17.0934C18.0643 17.0274 18.0248 16.9911 18.0182 16.9845C18.0017 16.9746 17.9819 16.9713 17.9588 16.9746C17.939 16.9746 17.9241 16.9795 17.9142 16.9894C17.8185 17.0587 17.7146 17.1165 17.6024 17.1627C17.4935 17.2056 17.3895 17.26 17.2905 17.326C17.2641 17.3458 17.213 17.3739 17.1371 17.4102C17.0645 17.4432 16.982 17.4795 16.8896 17.5191C16.8038 17.5587 16.7197 17.5999 16.6372 17.6428C16.558 17.6824 16.5002 17.7204 16.4639 17.7567C16.4276 17.7666 16.3913 17.7831 16.355 17.8062C16.3187 17.8293 16.2775 17.8639 16.2313 17.9101C16.2016 17.9332 16.1702 17.9381 16.1372 17.9249C16.1042 17.9117 16.0597 17.887 16.0036 17.8507Z"
-                        fill="#1B1F3A"
-                        />{" "}
-                    </svg>
-                    </button>
-                    <span className="seat-price">200 грн</span>
-                </div>
-                </div>
-            </div>
-            <div className="payment-summary">
-                <div className="total-info">
-                <span>Всього до сплати:</span>
-                <span className="total-price">200 грн</span>
-                </div>
-                <button className="continue-btn">Продовжити</button>
-            </div>
-            </div>
+  const token = localStorage.getItem("access");
+
+
+  const [sessions,setSessions] = useState([]);
+
+  const [loading,setLoading] = useState(true);
+
+  const [selectedSession,setSelectedSession] = useState(null);
+
+
+  useEffect(()=>{
+
+    fetch(`/api/v1/public/sessions/?movie=${movieId}`)
+
+      .then(r=>r.json())
+
+      .then(data=>{
+
+        const arr=Array.isArray(data.results)?data.results:data;
+
+        setSessions(arr);
+
+      })
+
+      .catch(console.error)
+
+      .finally(()=>setLoading(false));
+
+  },[movieId]);
+
+
+  const byDate = sessions.reduce((acc,s)=>{
+
+    const d=new Date(s.start_time).toLocaleDateString("uk-UA");
+
+    (acc[d]=acc[d]||[]).push(s);
+
+    return acc;
+
+  },{});
+
+
+  if(!selectedSession){
+
+    if(loading) return <div className="cinema-page">Завантаження…</div>;
+
+    return (
+
+      <div className="cinema-page">
+
+        <div className="session-list">
+
+          {Object.entries(byDate).map(([date,list])=>(
+
+            <React.Fragment key={date}>
+
+              <h2 style={{width:"100%",paddingLeft:25}}>{date}</h2>
+
+              {list.map(s=>{
+
+                const time=new Date(s.start_time).toLocaleTimeString("uk-UA",{hour:'2-digit',minute:'2-digit'});
+
+                return (
+
+                  <div
+
+                    key={s.id}
+
+                    className="session-card"
+
+                    onClick={()=>setSelectedSession(s)}
+
+                  >
+
+                    <div className="time">{time}</div>
+
+                    <div className="date">{date}</div>
+
+                  </div>
+
+                );
+
+              })}
+
+            </React.Fragment>
+
+          ))}
+
         </div>
-  </div>
+
+      </div>
+
     );
+
+  }
+
+
+  return (
+
+    <div className="cinema-page">
+
+      <button className="back-btn" onClick={()=>setSelectedSession(null)}>
+
+        ← Назад до сеансів
+
+      </button>
+
+      <Seating key={selectedSession.id} session={selectedSession} token={token}/>
+
+    </div>
+
+  );
+
 }

@@ -136,6 +136,7 @@ class ConfirmEmailView(APIView):
 
 
 class PublicSessionViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = Session.objects.all()
     serializer_class = SessionSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['movie', 'hall']

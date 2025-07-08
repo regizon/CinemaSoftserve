@@ -8,7 +8,7 @@ export default function FilmPage_Content({ title, original_title, slogan, descri
 
 
 return (
-<div>
+<div className="center-panel">
         <h1>{title}</h1>
         <p>
           <strong>Слоган:</strong> {slogan}
