@@ -30,6 +30,7 @@ from cinema.public_api.serializers import (
     ManualMovieSerializer,
 )
 
+
 class PublicMovieViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = BaseMovieSerializer
     lookup_field = 'uuid'
