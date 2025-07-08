@@ -66,92 +66,6 @@ class ManualMovieSerializer(BaseMovieSerializer, MovieRelationMixin):
         self._assign_relations(movie, actors, directors, genres, create_if_missing=False)
         return movie
 
-
-# class MovieSerializer(serializers.ModelSerializer):
-#     genres = serializers.ListField(
-#         child=serializers.CharField(),
-#         write_only=True
-#     )
-#     genres_read = serializers.SerializerMethodField()
-#
-#     actors = serializers.ListField(
-#         child=serializers.CharField(),
-#         write_only=True,
-#         required=False
-#     )
-#     actors_read = serializers.SerializerMethodField()
-#
-#     directors = serializers.ListField(
-#         child=serializers.CharField(),
-#         write_only=True,
-#         required=False
-#     )
-#     directors_read = serializers.SerializerMethodField()
-#
-#     class Meta:
-#         model = Movie
-#         fields = '__all__'
-#         read_only_fields = ['uuid']
-#
-#     def get_genres_read(self, obj):
-#         return [genre.genre_name for genre in obj.genres.all()]
-#
-#     def get_actors_read(self, obj):
-#         return [actor.actor_name for actor in obj.actors.all()]
-#
-#     def get_directors_read(self, obj):
-#         return [director.director_name for director in obj.directors.all()]
-#
-#     def create(self, validated_data):
-#         actors = validated_data.pop("actors", [])
-#         directors = validated_data.pop("directors", [])
-#         genres = validated_data.pop("genres", [])
-#
-#         if not validated_data.get('active_until'):
-#             validated_data['active_until'] = timezone.now() + timedelta(days=14)
-#
-#
-#         movie = super().create(validated_data)
-#
-#         # Создание связей с директорами (поиск по ID)
-#         for director_id in directors:
-#             try:
-#                 director = Director.objects.get(id=director_id)
-#                 MovieDirector.objects.get_or_create(movie=movie, director=director)
-#             except Director.DoesNotExist:
-#                 continue
-#
-#         for actor_id in actors:
-#             try:
-#                 actor = Actor.objects.get(id=actor_id)
-#                 MovieActor.objects.get_or_create(movie=movie, actor=actor)
-#             except Actor.DoesNotExist:
-#                 continue
-#
-#         for genre_id in genres:
-#             try:
-#                 genre = Genre.objects.get(id=genre_id)
-#                 MovieGenre.objects.get_or_create(movie=movie, genre=genre)
-#             except Genre.DoesNotExist:
-#                 continue
-#
-#         return movie
-
-    # def _assign_relations(self, movie, actors, directors, genres):
-    #     self._add_relation(actors, Actor, MovieActor, 'actor_name', 'actor', movie)
-    #     self._add_relation(directors, Director, MovieDirector, 'director_name', 'director', movie)
-    #     self._add_relation(genres, Genre, MovieGenre, 'genre_name', 'genre', movie)
-    #
-    # def _add_relation(self, items, model_class, through_model, lookup_field, related_field, movie):
-    #     for item in items:
-    #         try:
-    #             instance = model_class.objects.get(**{lookup_field: item})
-    #             through_model.objects.get_or_create(movie=movie, **{related_field: instance})
-    #         except model_class.DoesNotExist:
-    #             continue
-
-
-
 class ParserMovieSerializer(BaseMovieSerializer, MovieRelationMixin):
     def create(self, validated_data):
         actors = validated_data.pop("actors", [])
@@ -231,6 +145,30 @@ class SessionSerializer(serializers.ModelSerializer):
         total = obj.hall.capacity
         booked = Booking.objects.filter(session=obj, status=StatusChoices.BOOKED).count()
         return total - booked
+    
+    def validate(self, data):
+        hall = data.get('hall')
+        start_time = data.get('start_time')
+        expire_time = data.get('expire_time')
+
+        if not hall or not start_time or not expire_time:
+            return data 
+
+        overlapping_sessions = Session.objects.filter(
+            hall=hall,
+            start_time__lt=expire_time,
+            expire_time__gt=start_time
+        )
+
+        if self.instance:
+            overlapping_sessions = overlapping_sessions.exclude(pk=self.instance.pk)
+
+        if overlapping_sessions.exists():
+            raise serializers.ValidationError(
+                "У цьому залі вже є сеанс, який перетинається за часом."
+            )
+
+        return data
 
 
 class HallSerializer(serializers.ModelSerializer):
@@ -254,6 +192,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username','first_name', 'last_name', 'email', 'password', 'role')
         extra_kwargs = {'password': {'write_only': True}}
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Користувач з таким email вже існує")
+        return value
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])

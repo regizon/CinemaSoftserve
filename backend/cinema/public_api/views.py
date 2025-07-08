@@ -10,7 +10,6 @@ from rest_framework.permissions import AllowAny
 from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
 from cinema.public_api.serializers import (
     CustomTokenObtainPairSerializer,
-    MovieSerializer,
     BookingSerializer,
     ActorSerializer,
     GenreSerializer,
@@ -173,7 +172,6 @@ class ActorInfoView(APIView):
         except Actor.DoesNotExist:
             raise NotFound("Актор не знайдений у базі")
 
-        # Пошук по TMDb
         tmdb_search_url = "https://api.themoviedb.org/3/search/person"
         tmdb_response = requests.get(tmdb_search_url, params={
             "api_key": "8c71ea1bfc74c564ee45a3cbd6bec2ab",
@@ -191,7 +189,6 @@ class ActorInfoView(APIView):
         actor_data = results[0]
         tmdb_id = actor_data["id"]
 
-        # Детальна інфа про актора
         details_url = f"https://api.themoviedb.org/3/person/{tmdb_id}"
         details_response = requests.get(details_url, params={
             "api_key": "8c71ea1bfc74c564ee45a3cbd6bec2ab",
