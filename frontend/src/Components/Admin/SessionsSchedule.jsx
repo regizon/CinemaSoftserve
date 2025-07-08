@@ -3,6 +3,7 @@ import Select from 'react-select';
 
 export default function SessionsSchedule({
   createdMovie,
+    movieTitle,
   sessionDate,
   setSessionDate,
   sessions,
@@ -20,7 +21,11 @@ export default function SessionsSchedule({
     <div className="right-panel">
       <div className="schedule-box">
         <h4 className="schedule-title">Додати сеанси</h4>
-
+        {movieTitle && (
+          <p style={{ textAlign: 'center', fontSize: '16px', color: '#ccc', marginTop: '-10px' }}>
+            для <strong>{movieTitle}</strong>
+          </p>
+        )}
         <label className="date-label">Дата:</label>
         <input
           type="date"

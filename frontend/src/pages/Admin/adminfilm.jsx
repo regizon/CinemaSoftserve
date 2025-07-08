@@ -213,6 +213,7 @@ export default function AddMovie() {
 
       <SessionsSchedule
           createdMovie={createdMovie}
+          movieTitle={createdMovie?.title}
           sessionDate={sessionDate}
           setSessionDate={setSessionDate}
           sessions={sessions}
