@@ -26,7 +26,7 @@ function Seating({ session, token }) {
           : Array.isArray(data.results)
             ? data.results
             : [];
-        const filtered = arr.filter(b => b.session === session.id);
+        const filtered = arr.filter(b => b.session === session.id && b.status !== "CA");
         const map = {};
         filtered.forEach(b => {
           map[`${b.row}-${b.seat_number}`] = true;
@@ -47,36 +47,47 @@ function Seating({ session, token }) {
   };
 
   const handleBook = () => {
-    if (!selectedSeats.length) return;
-    Promise.all(
-      selectedSeats.map(({ row, number }) =>
-        fetch(`/api/v1/bookings/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            session: session.id,
-            row,
-            seat_number: String(number)
-          })
+  if (!selectedSeats.length) return;
+
+  Promise.all(
+    selectedSeats.map(({ row, number }) =>
+      fetch(`/api/v1/bookings/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          session: session.id,
+          row,
+          seat_number: number
         })
-      )
-    )
-      .then(() => {
-        alert("Успішно заброньовано!");
-        setTakenSeats(prev => {
-          const m = { ...prev };
-          selectedSeats.forEach(s => {
-            m[`${s.row}-${s.number}`] = true;
-          });
-          return m;
-        });
-        setSelectedSeats([]);
+      }).then(async res => {
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(`Помилка ${res.status}: ${JSON.stringify(errorData)}`);
+        }
+        return res.json();
       })
-      .catch(() => alert("Помилка бронювання"));
-  };
+    )
+  )
+    .then(() => {
+      alert("Успішно заброньовано!");
+      setTakenSeats(prev => {
+        const m = { ...prev };
+        selectedSeats.forEach(s => {
+          m[`${s.row}-${s.number}`] = true;
+        });
+        return m;
+      });
+      setSelectedSeats([]);
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Помилка бронювання: " + err.message);
+    });
+};
+
 
   // карта статусов
   const seatStatusMap = {};

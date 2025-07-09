@@ -144,7 +144,7 @@ export default function Profile() {
                         <div className="ticket-details">
                           <span>Дата: {date}</span>
                           <span>Час: {time}</span>
-                          <span>Ряд: {b.row + 1}</span>
+                          <span>Ряд: {b.row}</span>
                           <span>Місце: {b.seat_number}</span>
                           <span>Ціна: {b.ticket_price}₴</span>
                         </div>
