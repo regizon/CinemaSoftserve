@@ -20,6 +20,7 @@ export default function Carousel( {movies} ) {
       className="carousel slide"
       data-bs-ride="carousel"
       data-bs-interval="7000"
+      style={{marginTop:70}}
     >
       {/* Индикаторы */}
       <div className="carousel-indicators">
