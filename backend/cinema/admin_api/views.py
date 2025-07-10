@@ -1,6 +1,9 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from cinema.utils import TMDBParser
 from cinema.admin_api.serializers import MovieSearchSerializer
 from cinema.models import Movie, Session, Booking, Genre, Hall, Director, Actor, MovieGenre, MovieActor, MovieDirector
@@ -44,16 +47,18 @@ class AdminActorViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
 
 
-class FindFilm(generics.CreateAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = ParserMovieSerializer
-    #permission_classes = (IsAdminUser,)
+class FindFilm(APIView):
+    permission_classes = (IsAdminUser,)
 
+    def post(self, request):
+        title = request.data.get("title")
+        year = int(request.data.get("year"))
 
-    def perform_create(self, serializer):
-        title = self.request.data.get("title")
-        year = int(self.request.data.get("year"))
         parser = TMDBParser(title, year)
-        parser.parse_and_save()
+        try:
+            data = parser.parse_and_return_data()  # 👈 новая функция
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 

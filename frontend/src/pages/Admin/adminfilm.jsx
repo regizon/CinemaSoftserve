@@ -17,10 +17,13 @@ export default function AddMovie() {
     actorOptions,
     genreOptions,
     directorOptions,
+      fetchEntities,
   } = useMeta();
 
   
   // Поля формы
+  const [parserYear, setParserYear] = useState('2025');
+  const [parserTitle, setParserTitle] = useState('');
   const [selectedDirectors, setSelectedDirectors] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedActors, setSelectedActors] = useState([]);
@@ -42,7 +45,82 @@ export default function AddMovie() {
   const [alertMessage, setAlertMessage] = useState(null);
   const [alertType, setAlertType] = useState('');
 
-  
+
+
+  const handleParserSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!parserYear || !parserTitle.trim()) {
+    alert('Введіть рік та назву фільму для парсингу');
+    return;
+  }
+
+  try {
+    console.log('🔍 Отправка парсинга:', {
+    title: parserTitle.trim(),
+    year: parserYear,
+  });
+    const res = await fetch('/api/v1/admin/get_movie/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: parserTitle.trim(),
+        year: parserYear,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      await fetchEntities();
+      setTitle(data.title || '');
+      setSlogan(data.slogan || '');
+      setOriginalTitle(data.original_title || '');
+      setDescription(data.description || '');
+      setCountry(data.country || '');
+      setYear(data.year?.toString() || '');
+      setAge(data.age_rate?.toString() || '');
+      setLanguage(data.language || '');
+      setDuration(data.duration_minutes?.toString() || '');
+      setImg(data.img_url || '');
+      setPoster(data.poster_url || '');
+      setTrailer(data.trailer_url || '');
+
+      // Автоматически выбираем режиссера, актеров, жанры, если найдены
+      const findOption = (name, options) =>
+        options.find((opt) => opt.label.toLowerCase() === name.toLowerCase());
+
+      const director = findOption(data.director_name, directorOptions);
+      if (director) setSelectedDirectors([director]);
+
+      const actors = data.actors
+        .map((actorName) => findOption(actorName, actorOptions))
+        .filter(Boolean);
+      setSelectedActors(actors);
+
+      const genres = data.genres
+        .map((genreName) => findOption(genreName, genreOptions))
+        .filter(Boolean);
+      setSelectedGenres(genres);
+
+      setAlertMessage('Дані успішно підставлені у форму!');
+      setAlertType('success');
+    } else {
+      setAlertMessage(data?.detail || 'Не вдалося отримати дані');
+      setAlertType('danger');
+    }
+  } catch (err) {
+    console.error('Помилка запиту:', err);
+    setAlertMessage('Сервер недоступний');
+    setAlertType('danger');
+  }
+};
+
+
+
 
   const handleMovieSubmit = async (e) => {
     e.preventDefault();
@@ -166,50 +244,73 @@ export default function AddMovie() {
   if (error)   return <div>Помилка завантаження. Перевірте з'єднання</div>;
 
   return (
-    <>
-      <div className="admin-panel">
-        <PosterPreview img_url={img_url} />
+  <>
+    {/* Основная форма */}
+    <div className="admin-panel">
+      <PosterPreview img_url={img_url}/>
+      <div className="center-panel">
+        <form onSubmit={handleParserSubmit} className="parser-form">
+          <select
+              value={parserYear}
+              onChange={(e) => setParserYear(e.target.value)}
+              className="parser-select"
+          >
+            {Array.from({length: 26}, (_, i) => {
+              const y = 2025 - i;
+              return <option key={y} value={y}>{y}</option>;
+            })}
+          </select>
+
+          <input
+              type="text"
+              value={parserTitle}
+              onChange={(e) => setParserTitle(e.target.value)}
+              placeholder="Введіть назву фільму"
+              className="parser-input"
+          />
+
+          <button type="submit" className="parser-button">Парсити</button>
+        </form>
 
         <MovieForm
-          title={title}
-          setTitle={setTitle}
-          slogan={slogan}
-          setSlogan={setSlogan}
-          year={year}
-          setYear={setYear}
-          age_rate={age_rate}
-          setAge={setAge}
-          country={country}
-          setCountry={setCountry}
-          original_title={original_title}
-          setOriginalTitle={setOriginalTitle}
-          language={language}
-          setLanguage={setLanguage}
-          duration_minutes={duration_minutes}
-          setDuration={setDuration}
-          description={description}
-          setDescription={setDescription}
-          img_url={img_url}
-          setImg={setImg}
-          poster_url={poster_url}
-          setPoster={setPoster}
-          trailer_url={trailer_url}
-          setTrailer={setTrailer}
-          selectedDirectors={selectedDirectors}
-          setSelectedDirectors={setSelectedDirectors}
-          directorOptions={directorOptions}
-
-          selectedActors={selectedActors}
-          setSelectedActors={setSelectedActors}
-          actorOptions={actorOptions}
-
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-          genreOptions={genreOptions}
-          alertMessage={alertMessage}
-          alertType={alertType}
-          handleMovieSubmit={handleMovieSubmit}
+            title={title}
+            setTitle={setTitle}
+            slogan={slogan}
+            setSlogan={setSlogan}
+            year={year}
+            setYear={setYear}
+            age_rate={age_rate}
+            setAge={setAge}
+            country={country}
+            setCountry={setCountry}
+            original_title={original_title}
+            setOriginalTitle={setOriginalTitle}
+            language={language}
+            setLanguage={setLanguage}
+            duration_minutes={duration_minutes}
+            setDuration={setDuration}
+            description={description}
+            setDescription={setDescription}
+            img_url={img_url}
+            setImg={setImg}
+            poster_url={poster_url}
+            setPoster={setPoster}
+            trailer_url={trailer_url}
+            setTrailer={setTrailer}
+            selectedDirectors={selectedDirectors}
+            setSelectedDirectors={setSelectedDirectors}
+            directorOptions={directorOptions}
+            selectedActors={selectedActors}
+            setSelectedActors={setSelectedActors}
+            actorOptions={actorOptions}
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+            genreOptions={genreOptions}
+            alertMessage={alertMessage}
+            alertType={alertType}
+            handleMovieSubmit={handleMovieSubmit}
         />
+      </div>
 
       <SessionsSchedule
           createdMovie={createdMovie}
@@ -221,10 +322,11 @@ export default function AddMovie() {
           hallOptions={hallOptions}
           handleScheduleSubmit={handleScheduleSubmit}
           token={token}
-        />
-      </div>
+      />
+    </div>
 
-      <TrailerPlayer trailer_url={trailer_url} />
-    </>
+    <TrailerPlayer trailer_url={trailer_url}/>
+  </>
   );
+
 }
