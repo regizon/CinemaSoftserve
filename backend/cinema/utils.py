@@ -8,6 +8,7 @@ from rest_framework.views import exception_handler
 from rest_framework.exceptions import APIException
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
+from cinema.mixins.movie_relation_mixin import MovieRelationMixin
 from cinema.models import Actor, MovieActor, Director, MovieDirector, MovieGenre, Genre, Movie
 from cinema.public_api.serializers import ParserMovieSerializer
 
@@ -55,7 +56,7 @@ class EmailConfirmationTokenGenerator(PasswordResetTokenGenerator):
 
 email_confirmation_token = EmailConfirmationTokenGenerator()
 
-class TMDBParser:
+class TMDBParser(MovieRelationMixin):
     def __init__(self, title: str, year: int):
         self.title = title
         self.year = year
@@ -79,9 +80,19 @@ class TMDBParser:
             raise ValidationError("Movie already exists")
 
     def get_id(self):
-        id_response = requests.get(f"https://api.themoviedb.org/3/search/movie?query={self.title}&include_adult=false&language=en-US&primary_release_year={self.year}&page=1", headers=self.headers)
-        movie_id = id_response.json()['results'][0]['id']
-        self.movie_id = movie_id
+        response = requests.get(
+            f"https://api.themoviedb.org/3/search/movie?query={self.title}&include_adult=false&primary_release_year={self.year}&page=1",
+            headers=self.headers
+        )
+        print('🔎 TMDB response:', response.status_code)
+        print('🔎 TMDB JSON:', response.json())
+        data = response.json()
+        results = data.get('results', [])
+
+        if not results:
+            raise ValidationError(f"Фільм '{self.title}' за {self.year} рік не знайдено")
+
+        self.movie_id = results[0]['id']
 
     def get_movie(self):
         details_url = f"https://api.themoviedb.org/3/movie/{self.movie_id}?language=uk-UA"
@@ -154,3 +165,54 @@ class TMDBParser:
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return serializer.data
+
+    def ensure_people_created(self, director_name, actor_names):
+        print("🧪 Creating director:", repr(director_name))
+        if director_name and director_name.strip():
+            try:
+                Director.objects.get_or_create(director_name=director_name.strip())
+            except Exception as e:
+                print("❌ Помилка при додаванні режисера:", e)
+                raise
+
+        for name in actor_names:
+            print("🧪 Creating actor:", repr(name))
+            if name and name.strip():
+                try:
+                    Actor.objects.get_or_create(actor_name=name.strip())
+                except Exception as e:
+                    print("❌ Помилка при створенні актора:", e)
+                    raise
+
+    def parse_and_return_data(self):
+        self.get_id()
+        json_data = self.get_movie()
+        age = self.fetch_age_rating()
+        trailer_url = self.fetch_trailer_url()
+        director_name, actor_names = self.fetch_credits()
+
+        self.ensure_people_created(director_name, actor_names)
+
+        image_url = f"https://image.tmdb.org/t/p/w500{json_data['poster_path']}"
+        poster_url = f"https://image.tmdb.org/t/p/w300{json_data['backdrop_path']}"
+
+        return {
+            "title": self.title,
+            "slogan": json_data['original_title'],
+            "original_title": json_data['original_title'],
+            "description": json_data['overview'],
+            "country": json_data['origin_country'][0],
+            "year": self.year,
+            "age_rate": self.age_ratings.get(age, 0),
+            "language": "Українська",
+            "duration_minutes": json_data['runtime'],
+            "img_url": image_url,
+            "poster_url": poster_url,
+            "trailer_url": trailer_url,
+            "genres": [g['name'] for g in json_data['genres']],
+            "actors": actor_names,
+            "director_name": director_name
+        }
+
+
+

@@ -1,189 +1,277 @@
-.admin-panel {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
-  margin-top: 120px;
-  gap: 20px;
-}
+  .admin-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    margin-top: 120px;
+    gap: 20px;
+  }
 
-.left-panel, .center-panel, .right-panel {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-}
+  .admin-panel > form.parser-form,
+  .admin-panel > .movie-form-container {
+    flex: 1;
+    max-width: 100%;
+  }
 
-.left-panel {
-  width: 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .left-panel, .center-panel, .right-panel {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+  }
 
-.poster-upload {
-  width: 300px;
-  height: 450px;
-  background-color: #dcdcdc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 36px;
-  cursor: pointer;
-  border-radius: 8px;
-}
+  .left-panel {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.ticket-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 95px;
-  margin-top: 15px;
-  padding: 0;
-  background-color: #eee;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 32px;
-  padding-right: 10px;
-}
+  .poster-upload {
+    width: 300px;
+    height: 450px;
+    background-color: #dcdcdc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
 
-.center-panel {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+  .ticket-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 95px;
+    margin-top: 15px;
+    padding: 0;
+    background-color: #eee;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 32px;
+    padding-right: 10px;
+  }
 
-.center-panel input,
-.center-panel textarea {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+  .center-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.center-panel textarea {
-  min-height: 80px;
-  resize: vertical;
-}
+  .center-panel input,
+  .center-panel textarea {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 
-.right-panel {
-  display: flex;
-  flex-direction: column;
-}
+  .center-panel textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
 
-.schedule-box {
-  background-color: #1B1F3A;
-  color: white;
-  padding: 20px;
-  border-radius: 8px 8px 0 0;
-  max-height: 600px;
-  overflow-y: auto;
-  box-sizing: border-box;
-  flex-grow: 1;
-}
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+  }
 
-
-.button-wrapper {
-  text-align: center;
-}
-
-.button-wrapper button {
-  font-size: 18px;
-  border-radius: 8px;
-  border: none;
-  background-color: #526FE2;
-  color: white;
-  cursor: pointer;
-}
+  .schedule-box {
+    background-color: #1B1F3A;
+    color: white;
+    padding: 20px;
+    border-radius: 8px 8px 0 0;
+    max-height: 600px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    flex-grow: 1;
+  }
 
 
-.schedule-title {
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-  justify-content: center;
-  display: flex;
-}
+  .button-wrapper {
+    text-align: center;
+  }
 
-.schedule-date {
-  background-color: #2c3155;
-  padding: 5px;
-  border-radius: 4px;
-  text-align: center;
-  margin-bottom: 10px;
-}
+  .button-wrapper button {
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    background-color: #526FE2;
+    color: white;
+    cursor: pointer;
+  }
 
-.schedule-time {
-  background-color: #2c3155;
-  padding: 6px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  text-align: center;
-}
-.add-session-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-}
 
-.add-session-form input,
-.add-session-form button {
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-.session-block {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
-  padding-bottom: 1rem;      
-  margin-bottom: 1rem;       
-  border-bottom: 1px solid #fff; 
-}
+  .schedule-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+    justify-content: center;
+    display: flex;
+  }
 
-.session-block input {
-  padding: 6px;
-  border-radius: 4px;
-  border: none;
-  min-width: 140px;
-  flex: 1;
-}
+  .schedule-date {
+    background-color: #2c3155;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-.schedule-box button {
-  padding: 10px;
-  background-color: #3e4a7b;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-}
-.trailer {
-  margin: 40px auto;
-  text-align: center;
-}
-.date-label {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #bbb;
-}
-.date-input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
+  .schedule-time {
+    background-color: #2c3155;
+    padding: 6px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .add-session-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
 
+  .add-session-form input,
+  .add-session-form button {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  .session-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #fff;
+  }
+
+  .session-block input {
+    padding: 6px;
+    border-radius: 4px;
+    border: none;
+    min-width: 140px;
+    flex: 1;
+  }
+
+  .schedule-box button {
+    padding: 10px;
+    background-color: #3e4a7b;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .button-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .trailer {
+    margin: 40px auto;
+    text-align: center;
+  }
+  .date-label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #bbb;
+  }
+  .date-input {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+
+  .year-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
+
+  .year-form-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .year-select,
+  .year-input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  .year-select {
+    background-color: #526FE2;
+    color: white;
+  }
+
+  .short-select {
+    width: 100px;
+  }
+
+  .wide-input {
+    width: 412px;
+    margin-left: 15px;
+  }
+
+  .abo-text {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin-right: 50px;
+  }
+
+  .parser-form {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 10px 0;
+    padding: 0 15px;
+  }
+
+  .parser-select {
+    width: 100px;
+    padding: 8px;
+    font-size: 16px;
+    background-color: #526FE2;
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .parser-input {
+    flex: 1;
+    min-width: 300px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .parser-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #1B1F3A;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }

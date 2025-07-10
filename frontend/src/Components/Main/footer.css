@@ -1,0 +1,81 @@
+.footer {
+  background-color: #1B1F3A;
+  color: white;
+  padding: 30px 60px 20px;
+  font-family: 'Alike-Regular', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-left: 124px;
+}
+
+.footer-column,
+.footer-social {
+  flex: 1 1 220px;
+}
+.footer-column.about {
+  flex: 2 1 360px;
+  max-width: 500px;
+}
+.footer-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.footer-icons img,
+.footer-icons svg {
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+}
+
+.footer-column ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding-top: 10px;
+}
+.footer-icons-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: white;
+}
+
+.icon-row img,
+.icon-row svg {
+  width: 32px;
+  height: 32px;
+}
