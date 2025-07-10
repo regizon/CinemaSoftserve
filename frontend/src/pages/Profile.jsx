@@ -17,7 +17,7 @@ export default function Profile() {
             'Content-Type': 'application/json'
           }
         }),
-        fetch('/api/v1/bookings/', {
+        fetch('/api/v1/bookings/?limit=100', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
