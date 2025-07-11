@@ -51,9 +51,9 @@ export default function Home() {
       <div className="navigation">
         <nav className="navigation1">
           <FilterButton onChange={handleGenreFilter} />
-          <a href="#" className="nav">Купони та акції</a>
-          <a href="#" className="nav">Купівля квитків</a>
           <a href="#" className="nav">Скоро у КІНО!</a>
+          <a href="#" className="nav">Купони та акції</a>
+          
         </nav>
       </div>
 

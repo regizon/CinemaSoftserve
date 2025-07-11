@@ -130,10 +130,6 @@ export default function Profile() {
         <h1 className="profile-title">Профіль</h1>
         <div className="content-row">
           <div className="profile-container">
-            <div className="photo-upload">
-              <input type="file" accept="image/*" hidden />
-              <div className="photo-placeholder"><span>+</span></div>
-            </div>
 
             <div className="profile-form">
               <h2>Ім’я</h2>

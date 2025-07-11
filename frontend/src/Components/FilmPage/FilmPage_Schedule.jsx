@@ -13,53 +13,64 @@ export default function FilmPage_Schedule({ movieId }) {
   const { hallOptions, loading: hallsLoading, error: hallsError } = useHalls(token);
 
   useEffect(() => {
-    if (!movieId) return;
+    if (!movieId) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
 
-    fetch(`/api/v1/public/sessions/?movie=${movieId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.detail) {
+    const fetchSessions = async () => {
+      try {
+        const res = await fetch(`/api/v1/public/sessions/?movie=${movieId}`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+
+        const list = Array.isArray(data.results) ? data.results : [];
+
+        if (!list.length) {
           setNotFound(true);
-        } else {
-          const list = Array.isArray(data.results) ? data.results : data;
-          setSessions(list);
-
-          // Выбор текущей или ближайшей даты
-          const dates = Array.from(new Set(
-            list.map(s => s.start_time.slice(0, 10))
-          )).sort();
-
-          const today = new Date().toISOString().slice(0, 10);
-          setSelectedDate(dates.includes(today) ? today : dates[0] || "");
+          return;
         }
-      })
-      .catch(err => {
-        console.error("Ошибка загрузки сеансів:", err);
+
+        setSessions(list);
+
+        const availableDates = Array.from(new Set(
+          list.map(s => s.start_time?.slice(0, 10)).filter(Boolean)
+        )).sort();
+
+        const today = new Date().toISOString().slice(0, 10);
+        setSelectedDate(availableDates.includes(today) ? today : availableDates[0] || "");
+      } catch (error) {
+        console.error("Помилка завантаження сеансів:", error);
         setNotFound(true);
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSessions();
   }, [movieId]);
 
-  if (notFound) return <NotFound />;
   if (loading || hallsLoading) return <div>Завантаження…</div>;
-  if (hallsError) return <div>Помилка при завантаженні залів</div>;
+  if (hallsError) console.warn("Помилка при завантаженні залів:", hallsError); // не мешает отрисовке
 
-  // Сессии на выбранную дату
-  const daySessions = sessions.filter(s => s.start_time.slice(0, 10) === selectedDate);
+  const filteredSessions = sessions.filter(
+    s => s.start_time?.slice(0, 10) === selectedDate
+  );
 
-  // Группировка по залам
   const sessionsByHall = {};
-  daySessions.forEach(session => {
-    const hallOption = hallOptions.find(h => h.value === session.hall);
-    const hallName = session.hall_name || hallOption?.label || "Невідомий зал";
-    if (!sessionsByHall[hallName]) {
-      sessionsByHall[hallName] = [];
-    }
+
+  filteredSessions.forEach(session => {
+    const hall = hallOptions?.find?.(h => h.value === session.hall);
+    const hallName = session.hall_name || hall?.label || "—";
+
+    if (!sessionsByHall[hallName]) sessionsByHall[hallName] = [];
     sessionsByHall[hallName].push(session);
   });
 
-  // Все доступные даты
-  const dateOptions = Array.from(new Set(sessions.map(s => s.start_time.slice(0, 10)))).sort();
+  const dateOptions = Array.from(
+    new Set(sessions.map(s => s.start_time?.slice(0, 10)).filter(Boolean))
+  ).sort();
 
   return (
     <div className="film-schedule">
@@ -82,20 +93,25 @@ export default function FilmPage_Schedule({ movieId }) {
       </div>
 
       <ul>
-        {daySessions.length === 0 ? (
-          <li>Сеанси не знайдені</li>
+        {filteredSessions.length === 0 ? (
+          <li>Сеансів на цю дату не знайдено</li>
         ) : (
           Object.entries(sessionsByHall).map(([hallName, hallSessions]) => (
             <React.Fragment key={hallName}>
-              <li className="hall-header" style={{marginLeft: 150}}><strong>{hallName}</strong></li>
+              <li className="hall-header" style={{ marginLeft: 150 }}>
+                <strong>{hallName}</strong>
+              </li>
               {hallSessions.map(session => {
-                const time = new Date(session.start_time).toLocaleTimeString("uk-UA", {
-                  hour: "2-digit",
-                  minute: "2-digit"
-                });
+                const time = session.start_time
+                  ? new Date(session.start_time).toLocaleTimeString("uk-UA", {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })
+                  : "??:??";
+
                 return (
                   <li key={session.id}>
-                    <Link to={`/booking/${session.id}`}>
+                    <Link>
                       {time}, {session.is_3d ? "3D" : "2D"}
                     </Link>
                     <hr />

@@ -208,7 +208,7 @@ export default function FilmPage_Main({ movie }) {
           )}
         </div>
 
-        <div className="film-poster">
+        <div className="film-schedule">
           {isSessionEditing ? <SheduleEdit/> : <Shedule/>}
 
           {user?.role === 'AD' ? (
