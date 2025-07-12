@@ -84,17 +84,8 @@ export default function Login() {
                 </form>
                 <div className="divider">
                     <hr/>
-                    <span>Або увійдіть за допомогою</span>
                     <hr/>
                 </div>
-                <button className="google-btn">
-                    <img
-                        src="https://www.svgrepo.com/show/475656/google-color.svg"
-                        alt="Google"
-                        className="google-icon"
-                    />
-                    Продовжити за допомогою Google
-                </button>
                 <Link to="/" className="back-link">⬅ Повернутись назад на сайт <strong>Svinkino</strong></Link>
             </div>
         </div>

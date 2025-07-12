@@ -56,7 +56,7 @@ class FindFilm(APIView):
 
         parser = TMDBParser(title, year)
         try:
-            data = parser.parse_and_return_data()  # 👈 новая функция
+            data = parser.parse_and_return_data()
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -229,3 +229,19 @@
   font-size: 0.85rem;
   color: #555;
 }
+
+.edit-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #2b80ff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

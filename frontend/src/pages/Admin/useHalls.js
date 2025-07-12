@@ -17,7 +17,7 @@ export function useHalls(token) {
 
     async function fetchHalls() {
       try {
-        const res = await fetch('/api/v1/admin/halls/', {
+        const res = await fetch('/api/v1/public/halls/', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
