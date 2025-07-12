@@ -187,7 +187,12 @@ export default function FilmPage_ScheduleEdit({ movieId }) {
               options={hallOptions}
               value={hallOptions.find(o => o.value === s.hall) || null}
               onChange={opt => handleChange(idx, 'hall', opt.value)}
+              menuPortalTarget={document.body}
+              styles={{
+                menuPortal: base => ({ ...base, zIndex: 9999 }),
+              }}
             />
+
             <button type="button" onClick={() => handleDelete(s)}>
               Видалити
             </button>

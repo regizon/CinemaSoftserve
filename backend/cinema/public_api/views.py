@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 import requests
 
 from cinema.utils import email_confirmation_token
-from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director
+from cinema.models import Movie, Booking, Genre, User, Session, StatusChoices, Actor, Director, Hall
 from cinema.public_api.serializers import (
     CustomTokenObtainPairSerializer,
     BaseMovieSerializer,
@@ -27,7 +27,7 @@ from cinema.public_api.serializers import (
     BookingCancelSerializer,
     ProfileSerializer,
     DirectorSerializer,
-    ManualMovieSerializer,
+    ManualMovieSerializer, HallSerializer,
 )
 
 
@@ -240,3 +240,8 @@ class AllEntitiesView(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class PublicHallViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = Hall.objects.all()
+    serializer_class = HallSerializer
