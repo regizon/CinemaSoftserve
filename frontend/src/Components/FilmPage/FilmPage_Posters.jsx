@@ -7,7 +7,7 @@ export default function FilmPage_Posters() {
   
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/v1/public/movies/`)
+    fetch(`/api/v1/public/movies/`)
       .then(res => res.json())
       .then(data => setMovie(data))
       .catch(err => console.error(err));

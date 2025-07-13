@@ -62,7 +62,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5174",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8000",
-    "https://cinemasoftserve-8ejj.onrender.com"
+    "https://cinemasoftserve-8ejj.onrender.com",
+    "https://cinemasoftserve-front.onrender.com/",
 ]
 
 ROOT_URLCONF = 'cinema_project.urls'
