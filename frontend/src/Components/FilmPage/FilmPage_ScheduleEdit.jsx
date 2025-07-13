@@ -13,7 +13,7 @@ export default function FilmPage_ScheduleEdit({ movieId }) {
     if (!movieId) return;
 
     // load sessions
-    fetch(`/api/v1/public/sessions/?movie=${movieId}`)
+    fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/sessions/?movie=${movieId}`)
       .then(res => res.json())
       .then(data => {
         const all = data.results || [];
@@ -60,7 +60,7 @@ export default function FilmPage_ScheduleEdit({ movieId }) {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/v1/admin/sessions/${session.id}/`, {
+      const res = await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/sessions/${session.id}/`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -103,7 +103,7 @@ export default function FilmPage_ScheduleEdit({ movieId }) {
 
         if (session.id) {
           // update existing
-          await fetch(`/api/v1/admin/sessions/${session.id}/`, {
+          await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/sessions/${session.id}/`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export default function FilmPage_ScheduleEdit({ movieId }) {
           });
         } else {
           // create new
-          await fetch(`/api/v1/admin/sessions/`, {
+          await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/sessions/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

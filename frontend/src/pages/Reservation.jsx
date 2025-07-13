@@ -30,7 +30,7 @@ function Seating({ session, token }) {
     setTakenSeats({});
     setSelectedSeats([]);
 
-    const url = `/api/v1/bookings/?session=${session.id}&limit=10`;
+    const url = `https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/?session=${session.id}&limit=10`;
     const headers = { Authorization: `Bearer ${token}` };
 
     fetchAllBookings(url, headers)
@@ -61,7 +61,7 @@ function Seating({ session, token }) {
 
     Promise.all(
       selectedSeats.map(({ row, number }) =>
-        fetch(`/api/v1/bookings/`, {
+        fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -219,7 +219,7 @@ export default function Reservation() {
   const [selectedSession, setSelectedSession] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/v1/public/sessions/?movie=${movieId}`)
+    fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/sessions/?movie=${movieId}`)
       .then(r => r.json())
       .then(data => {
         const arr = Array.isArray(data.results) ? data.results : data;

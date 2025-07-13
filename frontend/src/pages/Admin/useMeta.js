@@ -11,7 +11,7 @@ export function useMeta() {
   const fetchEntities = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/v1/public/all-entities/');
+      const res = await fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/public/all-entities/');
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`HTTP ${res.status}: ${text}`);

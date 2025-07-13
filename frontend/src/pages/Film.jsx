@@ -20,7 +20,7 @@ export default function Film() {
   const handleToggleEdit = () => setIsSessionEditing(prev => !prev);
 
   useEffect(() => {
-    fetch(`/api/v1/public/movies/${id}/`)
+    fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/movies/${id}/`)
       .then(res => res.json())
       .then(data => {
         if (data.detail) {

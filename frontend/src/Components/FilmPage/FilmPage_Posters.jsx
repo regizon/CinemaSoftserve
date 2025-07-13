@@ -7,7 +7,7 @@ export default function FilmPage_Posters() {
   
 
   useEffect(() => {
-    fetch(`/api/v1/public/movies/`)
+    fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/movies/`)
       .then(res => res.json())
       .then(data => setMovie(data))
       .catch(err => console.error(err));

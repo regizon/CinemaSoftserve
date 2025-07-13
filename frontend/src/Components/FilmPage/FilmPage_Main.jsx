@@ -99,7 +99,7 @@ export default function FilmPage_Main({ movie }) {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(`/api/v1/admin/movies/${movie.id}/`, {
+      const response = await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/movies/${movie.id}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -129,7 +129,7 @@ export default function FilmPage_Main({ movie }) {
         genres: selectedGenres.map(genre => genre.value)
       };
 
-      const response = await fetch(`/api/v1/admin/movies/${movie.id}/`, {
+      const response = await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/movies/${movie.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

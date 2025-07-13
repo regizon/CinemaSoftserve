@@ -60,7 +60,7 @@ export default function AddMovie() {
     title: parserTitle.trim(),
     year: parserYear,
   });
-    const res = await fetch('/api/v1/admin/get_movie/', {
+    const res = await fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/get_movie/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export default function AddMovie() {
     };
 
     try {
-      const response = await fetch('/api/v1/admin/movies/', {
+      const response = await fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/admin/movies/', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

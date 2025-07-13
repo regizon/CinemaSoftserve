@@ -21,7 +21,7 @@ export default function FilmPage_Schedule({ movieId }) {
 
     const fetchSessions = async () => {
       try {
-        const res = await fetch(`/api/v1/public/sessions/?movie=${movieId}`);
+        const res = await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/sessions/?movie=${movieId}`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
 

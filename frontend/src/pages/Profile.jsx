@@ -20,13 +20,13 @@ export default function Profile() {
   useEffect(() => {
     async function fetchData() {
       const [profileRes, bookingsRes] = await Promise.all([
-        fetch('/api/v1/profile/', {
+        fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/profile/', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch('/api/v1/bookings/?limit=100', {
+        fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/?limit=100', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ export default function Profile() {
       payload.new_password = formData.new_password;
     }
 
-    const res = await fetch('/api/v1/profile/', {
+    const res = await fetch('https://cinemasoftserve-8ejj.onrender.com/api/v1/profile/', {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -96,7 +96,7 @@ export default function Profile() {
 
   const handleCancel = async (bookingId) => {
     if (!window.confirm("Ви дійсно хочете скасувати це бронювання?")) return;
-    const res = await fetch(`/api/v1/bookings/${bookingId}/cancel/`, {
+    const res = await fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/${bookingId}/cancel/`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${token}`,
