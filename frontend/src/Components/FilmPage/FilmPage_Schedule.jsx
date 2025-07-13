@@ -94,7 +94,7 @@ export default function FilmPage_Schedule({ movieId }) {
 
       <ul>
         {filteredSessions.length === 0 ? (
-          <li>Сеансів на цю дату не знайдено</li>
+          <li style={{marginLeft: 10}}>Сеансів на цю дату не знайдено</li>
         ) : (
           Object.entries(sessionsByHall).map(([hallName, hallSessions]) => (
             <React.Fragment key={hallName}>
