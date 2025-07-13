@@ -88,30 +88,30 @@ WSGI_APPLICATION = 'cinema_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cinema_db_mkvz',
-#         'USER': 'admin',
-#         'PASSWORD': 'gtSEvtijoHJ053rPhiOzXQBMK8Cw9UEN',
-#         'HOST': 'dpg-d1huiovfte5s73atse9g-a',
-#         'PORT': '5432',
-#     }
-# }
-
-# dpg-d1huiovfte5s73atse9g-a.oregon-postgres.render.com
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cinema_db',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
+        'NAME': 'db_cinema_k461',
+        'USER': 'admin',
+        'PASSWORD': 'CZB9mlUWez3Zf25Bgq4tYxhsJffvikuf',
+        'HOST': 'dpg-d1pokd3uibrs73dvkskg-a',
         'PORT': '5432',
     }
 }
+
+# dpg-d1pokd3uibrs73dvkskg-a.oregon-postgres.render.com
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cinema_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
