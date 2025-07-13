@@ -4,7 +4,7 @@ import Home from './pages/Home.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Film from './pages/Film.jsx'; 
 import Profile from './pages/Profile.jsx'; 
-import Register from './pages/auth/register.jsx'; 
+import Register from './pages/auth/Register.jsx'
 import Login from './pages/auth/Login.jsx'; 
 import UnLogin from './pages/auth/UnLogin.jsx'; 
 
