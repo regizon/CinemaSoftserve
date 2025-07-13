@@ -2,22 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./Reservation.css";
 
-
-/** Компонент, который рисует и управляет местами для одного сеанса. */
 function Seating({ session, token }) {
   const [takenSeats, setTakenSeats] = useState({});
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   const seatCounts = [14, 16, 16, 18, 20, 22, 22, 24, 24, 26];
   const VIP_COUNT = 4;
+  const VIP_ROW = 0;
 
-  // вспомогательная функция: докачиваем все страницы пагинации
   const fetchAllBookings = async (url, headers, acc = []) => {
     const res = await fetch(url, { headers });
     const json = await res.json();
-    const pageArr = Array.isArray(json.results) ? json.results : Array.isArray(json) ? json : [];
+    const pageArr = Array.isArray(json.results)
+      ? json.results
+      : Array.isArray(json)
+      ? json
+      : [];
     const all = acc.concat(pageArr);
-
     if (json.next) {
       return fetchAllBookings(json.next, headers, all);
     } else {
@@ -25,18 +26,16 @@ function Seating({ session, token }) {
     }
   };
 
-  // сразу после mount или при смене session.id — грузим забронированные места
   useEffect(() => {
     setTakenSeats({});
     setSelectedSeats([]);
-
     const url = `https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/?session=${session.id}&limit=10`;
     const headers = { Authorization: `Bearer ${token}` };
-
     fetchAllBookings(url, headers)
       .then(arr => {
-        console.log(`Fetched ${arr.length} bookings across pages for session ${session.id}:`, arr);
-        const filtered = arr.filter(b => b.session === session.id && b.status !== "CA");
+        const filtered = arr.filter(
+          b => b.session === session.id && b.status !== "CA"
+        );
         const map = {};
         filtered.forEach(b => {
           map[`${b.row}-${b.seat_number}`] = true;
@@ -58,7 +57,6 @@ function Seating({ session, token }) {
 
   const handleBook = () => {
     if (!selectedSeats.length) return;
-
     Promise.all(
       selectedSeats.map(({ row, number }) =>
         fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/bookings/`, {
@@ -75,7 +73,9 @@ function Seating({ session, token }) {
         }).then(async res => {
           if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
-            throw new Error(`Помилка ${res.status}: ${JSON.stringify(errorData)}`);
+            throw new Error(
+              `Помилка ${res.status}: ${JSON.stringify(errorData)}`
+            );
           }
           return res.json();
         })
@@ -98,7 +98,6 @@ function Seating({ session, token }) {
       });
   };
 
-  // собираем карту статусов
   const seatStatusMap = {};
   selectedSeats.forEach(s => {
     seatStatusMap[`${s.row}-${s.number}`] = "selected";
@@ -132,7 +131,9 @@ function Seating({ session, token }) {
   );
 
   const getPrice = row =>
-    row === 1 ? parseFloat(session.vip_price) : parseFloat(session.price);
+    row === VIP_ROW
+      ? parseFloat(session.vip_price)
+      : parseFloat(session.price);
   const total = selectedSeats.reduce((sum, s) => sum + getPrice(s.row), 0);
 
   return (
@@ -148,7 +149,9 @@ function Seating({ session, token }) {
           })}
         </h2>
         <p>Зал: {session.hall_name}</p>
-        <p>Ціна: {session.price} грн / VIP: {session.vip_price} грн</p>
+        <p>
+          Ціна: {session.price} грн / VIP: {session.vip_price} грн
+        </p>
       </div>
 
       <div className="cinema-wrapper">
@@ -159,7 +162,7 @@ function Seating({ session, token }) {
           ))}
           <div className="vip-row">
             {Array.from({ length: VIP_COUNT }, (_, i) => {
-              const row = 1;
+              const row = VIP_ROW;
               const num = i + 1;
               const key = `${row}-${num}`;
               return (
@@ -219,7 +222,9 @@ export default function Reservation() {
   const [selectedSession, setSelectedSession] = useState(null);
 
   useEffect(() => {
-    fetch(`https://cinemasoftserve-8ejj.onrender.com/api/v1/public/sessions/?movie=${movieId}`)
+    fetch(
+      `https://cinemasoftserve-8ejj.onrender.com/api/v1/public/sessions/?movie=${movieId}`
+    )
       .then(r => r.json())
       .then(data => {
         const arr = Array.isArray(data.results) ? data.results : data;

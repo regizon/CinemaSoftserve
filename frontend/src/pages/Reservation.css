@@ -529,3 +529,8 @@
   font-size: 14px;
   color: #666;
 }
+
+.tickets-list1 {
+  max-height: 400px;    
+  overflow-y: auto;
+}
